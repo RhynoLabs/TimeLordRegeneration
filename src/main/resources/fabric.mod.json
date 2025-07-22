@@ -1,0 +1,25 @@
+{
+  "schemaVersion": 1,
+  "id": "timelordregen",
+  "version": "1.0.0",
+  "name": "Time Lord Regeneration",
+  "description": "A Doctor Who regeneration mod.",
+  "authors": ["ThatRhynoGuy"],
+  "contact": {
+    "sources": "https://github.com/thatrhynoguy/timelordregeneration"
+  },
+  "license": "MIT",
+  "environment": "*",
+  "entrypoints": {
+    "main": [
+      "com.rhyno.timelordregen.RegenerationMod"
+    ],
+    "client": [
+      "com.rhyno.timelordregen.client.RegenerationClientMod"
+    ]
+  },
+  "depends": {
+    "fabricloader": ">=0.14.22",
+    "fabric-api": "*"
+  }
+}
