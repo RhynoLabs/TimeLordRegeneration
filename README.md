@@ -4,8 +4,19 @@ ITEMS
 
 Elixir of Life - Gives players ability to Regenerate (Limit 12)
 Chameleon Arch - Stores player Regenerations to allow player death. Will also be used as the customisation GUI using R keybind.
-White-point Star - Diamond crafted from a nether star and Gallifrey Diamonds used to create Elixir of Life
+White-point Star - Diamond crafted from Azbantium and Diamond used to create Elixir of Life
 Bucket of Artron - can be used as a fuel for AIT Tardis
+Azbantium Ingot -
+Raw Azbantium 
+Azbantium Axe
+Azbantium Pickaxe
+Azbantium Sword
+Azbantium Hoe
+Azbantium Shovel
+Azbantihum Helmet
+Azbantium Chestplate
+Azbantium Leggings
+Azbantium Boots
 
 GUI
 
@@ -22,9 +33,10 @@ Regeneration Steal - Allows players to steal any remaining regenerations from an
 
 DIMENSIONS
 
-Gallifrey - Planet of the Time Lords - will have liquid artron pools and Gallifrey Diamond Ore which can be used to craft the White-Point Star (used to create Elixir of Life)
+Gallifrey - Planet of the Time Lords - will have liquid artron pools and Azbantium ore which can be used to craft the White-Point Star (used to create Elixir of Life)
 
 BLOCKS
 
-Gallifrey Diamond Ore
+Azbantium Ore - Mined with Netherite Pickaxe
+Azbantium Block
 Liquid Artron
