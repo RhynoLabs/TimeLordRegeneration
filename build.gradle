@@ -1,5 +1,5 @@
 plugins {
-    id 'fabric-loom' version '1.5-SNAPSHOT' // or latest stable version
+    id 'fabric-loom' version '1.11-SNAPSHOT' // or latest stable version
     id 'maven-publish'
 }
 
@@ -14,7 +14,7 @@ repositories {
 dependencies {
     minecraft 'com.mojang:minecraft:1.20.1'
     mappings 'net.fabricmc:yarn:1.20.1+build.10:v2'
-    modImplementation 'net.fabricmc:fabric-loader:0.14.22'
+    modImplementation 'net.fabricmc:fabric-loader:0.16.3'
     modImplementation 'net.fabricmc.fabric-api:fabric-api:0.91.0+1.20.1' // or newer
     modImplementation 'net.fabricmc.fabric-api:fabric-screen-handler-api-v1:0.91.0+1.20.1'
 
@@ -23,6 +23,9 @@ dependencies {
 
     // GUI-related APIs (optional, but often useful)
     modImplementation 'net.fabricmc.fabric-api:fabric-screen-api-v1:0.91.0+1.20.1'
+
+    // duzos animator
+    modImplementation files("libs/animator.jar")
 }
 
 loom {

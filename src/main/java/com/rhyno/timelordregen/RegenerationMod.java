@@ -13,9 +13,9 @@ import net.minecraft.registry.Registries;
 
 public class RegenerationMod implements ModInitializer {
 
-    public static final String MODID = "timelordregen";
+    public static final String MOD_ID = "timelordregen";
 
-    public static final Identifier REGEN_SOUND_ID = new Identifier(MODID, "regeneration");
+    public static final Identifier REGEN_SOUND_ID = new Identifier(MOD_ID, "regeneration");
     public static final SoundEvent REGEN_SOUND = Registry.register(
             Registries.SOUND_EVENT,
             REGEN_SOUND_ID,
