@@ -40,3 +40,11 @@ BLOCKS
 Azbantium Ore - Mined with Netherite Pickaxe
 Azbantium Block
 Liquid Artron
+
+Advancements
+"The Shining World of the Seven Systems" - Arrive on Gallifrey for the first time
+"Change, my dear" - Regenerate for the first time
+"I don't want to go" - Delay regeneration for the first time
+"Oh reaLly? How inelegant!" - Bigenerate for the first time
+"Not just a fobwatch" - Craft Chameleon Arch
+
