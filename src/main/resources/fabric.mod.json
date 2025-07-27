@@ -6,7 +6,7 @@
   "description": "A Doctor Who regeneration mod.",
   "authors": ["ThatRhynoGuy"],
   "contact": {
-    "sources": "https://github.com/thatrhynoguy/timelordregeneration"
+    "sources": "https://github.com/RhynoLabs/TimeLordRegeneration"
   },
   "license": "MIT",
   "environment": "*",
