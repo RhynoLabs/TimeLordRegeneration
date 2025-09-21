@@ -16,6 +16,9 @@
     ],
     "client": [
       "com.rhyno.timelordregen.client.RegenerationClientMod"
+    ],
+    "fabric-datagen": [
+      "com.rhyno.timelordregen.datagen.RegenDataGen"
     ]
   },
   "depends": {
