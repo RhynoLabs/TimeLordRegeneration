@@ -3,20 +3,32 @@ plugins {
     id 'maven-publish'
 }
 
-group = 'com.rhyno.timelordregen'
-version = '1.0.0'
+apply from: 'versioning.gradle'
+
+version = getCurrentVersion()
+group = project.maven_group
+
+base {
+	archivesName = project.archives_base_name
+}
 
 repositories {
     maven { url = "https://maven.fabricmc.net/" }
     mavenCentral()
+
+	maven {
+		url "https://jitpack.io"
+		metadataSources {
+			artifact() // Look directly for artifact
+		}
+	}
 }
 
 dependencies {
-    minecraft 'com.mojang:minecraft:1.20.1'
-    mappings 'net.fabricmc:yarn:1.20.1+build.10:v2'
-    modImplementation 'net.fabricmc:fabric-loader:0.16.3'
-    modImplementation 'net.fabricmc.fabric-api:fabric-api:0.91.0+1.20.1' // or newer
-    modImplementation 'net.fabricmc.fabric-api:fabric-screen-handler-api-v1:0.91.0+1.20.1'
+	minecraft "com.mojang:minecraft:${project.minecraft_version}"
+	mappings "net.fabricmc:yarn:${project.yarn_mappings}:v2"
+	modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
+	modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
 
     // Explicitly add networking API if needed
     modImplementation 'net.fabricmc.fabric-api:fabric-networking-api-v1:0.91.0+1.20.1'
@@ -26,6 +38,10 @@ dependencies {
 
     // duzos animator
     modImplementation files("libs/animator.jar")
+
+	// amblekit
+	modImplementation "com.github.amblelabs:ait:${project.ait_version}"
+	modImplementation("com.github.amblelabs:modkit:v${project.amblekit_version}")
 }
 
 loom {

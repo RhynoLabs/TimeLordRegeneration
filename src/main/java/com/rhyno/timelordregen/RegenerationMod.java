@@ -35,6 +35,5 @@ public class RegenerationMod implements ModInitializer {
         });
 
         // Init regeneration manager
-
     }
 }
