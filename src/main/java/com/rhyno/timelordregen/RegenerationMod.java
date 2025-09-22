@@ -1,9 +1,13 @@
 package com.rhyno.timelordregen;
 
 import com.rhyno.timelordregen.commands.RegenCommand;
+import com.rhyno.timelordregen.core.RegenerationModBlocks;
+import com.rhyno.timelordregen.core.RegenerationModItemGroups;
+import com.rhyno.timelordregen.core.RegenerationModItems;
 import com.rhyno.timelordregen.data.Attachments;
 import com.rhyno.timelordregen.api.RegenerationInfo;
 import com.rhyno.timelordregen.network.Networking;
+import dev.amble.lib.container.RegistryContainer;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
 import net.fabricmc.fabric.api.entity.event.v1.ServerLivingEntityEvents;
@@ -32,6 +36,9 @@ public class RegenerationMod implements ModInitializer {
 
 	    Attachments.init();
         Networking.register();
+        RegistryContainer.register(RegenerationModItemGroups.class, MOD_ID);
+        RegistryContainer.register(RegenerationModBlocks.class, MOD_ID);
+        RegistryContainer.register(RegenerationModItems.class, MOD_ID);
 
         // Register commands
         CommandRegistrationCallback.EVENT.register((dispatcher, registryAccess, environment) -> {
