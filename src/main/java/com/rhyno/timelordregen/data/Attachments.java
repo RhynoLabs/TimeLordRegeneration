@@ -1,6 +1,7 @@
 package com.rhyno.timelordregen.data;
 
 import com.rhyno.timelordregen.RegenerationMod;
+import com.rhyno.timelordregen.api.RegenerationInfo;
 import net.fabricmc.fabric.api.attachment.v1.AttachmentRegistry;
 import net.fabricmc.fabric.api.attachment.v1.AttachmentType;
 

@@ -1,6 +1,5 @@
 package com.rhyno.timelordregen.api;
 
-import com.rhyno.timelordregen.data.RegenerationInfo;
 import net.fabricmc.fabric.api.event.Event;
 import net.fabricmc.fabric.api.event.EventFactory;
 import net.minecraft.entity.Entity;

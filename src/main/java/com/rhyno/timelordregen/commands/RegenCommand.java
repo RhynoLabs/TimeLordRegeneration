@@ -1,7 +1,7 @@
 package com.rhyno.timelordregen.commands;
 
 import com.mojang.brigadier.CommandDispatcher;
-import com.rhyno.timelordregen.data.RegenerationInfo;
+import com.rhyno.timelordregen.api.RegenerationInfo;
 import com.rhyno.timelordregen.network.Networking;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.server.network.ServerPlayerEntity;

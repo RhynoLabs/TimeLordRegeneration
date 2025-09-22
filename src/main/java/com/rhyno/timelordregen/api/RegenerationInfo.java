@@ -1,15 +1,13 @@
-package com.rhyno.timelordregen.data;
+package com.rhyno.timelordregen.api;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import com.rhyno.timelordregen.RegenerationMod;
-import com.rhyno.timelordregen.api.RegenerationEvents;
+import com.rhyno.timelordregen.data.Attachments;
 import dev.drtheo.scheduler.api.TimeUnit;
 import dev.drtheo.scheduler.api.common.Scheduler;
 import dev.drtheo.scheduler.api.common.TaskStage;
 import lombok.Getter;
 import lombok.Setter;
-import net.fabricmc.fabric.api.attachment.v1.AttachmentType;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.sound.SoundCategory;
@@ -47,16 +45,13 @@ public class RegenerationInfo {
 		}
 	}
 
-	public boolean tryStart(Entity entity) {
+	public boolean tryStart(LivingEntity entity) {
 		if (this.isRegenerating() || this.usesLeft <= 0) return false;
 
 		this.decrement();
 		this.setRegenerating(true);
 
-		if (entity instanceof LivingEntity living) {
-			living.setHealth(living.getMaxHealth());
-		}
-
+		entity.setHealth(entity.getMaxHealth());
 		entity.getWorld().playSound(null, entity.getBlockPos(), SoundEvents.ITEM_TOTEM_USE, SoundCategory.PLAYERS);
 
 		RegenerationEvents.START.invoker().onStart(entity, this);
@@ -65,12 +60,12 @@ public class RegenerationInfo {
 		return true;
 	}
 
-	private void finish(Entity entity) {
+	private void finish(LivingEntity entity) {
 		this.setRegenerating(false);
 		RegenerationEvents.FINISH.invoker().onFinish(entity, this);
 	}
 
-	public static RegenerationInfo get(Entity entity) {
+	public static RegenerationInfo get(LivingEntity entity) {
 		return entity.getAttachedOrCreate(Attachments.REGENERATION);
 	}
 }

@@ -1,6 +1,6 @@
 package com.rhyno.timelordregen.client.gui;
 
-import com.rhyno.timelordregen.data.RegenerationInfo;
+import com.rhyno.timelordregen.api.RegenerationInfo;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.DrawContext;

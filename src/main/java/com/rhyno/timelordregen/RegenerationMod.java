@@ -2,15 +2,12 @@ package com.rhyno.timelordregen;
 
 import com.rhyno.timelordregen.commands.RegenCommand;
 import com.rhyno.timelordregen.data.Attachments;
-import com.rhyno.timelordregen.data.RegenerationInfo;
+import com.rhyno.timelordregen.api.RegenerationInfo;
 import com.rhyno.timelordregen.network.Networking;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
 import net.fabricmc.fabric.api.entity.event.v1.ServerLivingEntityEvents;
-import net.minecraft.sound.SoundEvent;
 import net.minecraft.util.Identifier;
-import net.minecraft.registry.Registry;
-import net.minecraft.registry.Registries;
 import net.minecraft.util.math.random.Random;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
