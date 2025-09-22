@@ -1,5 +1,5 @@
 plugins {
-    id 'fabric-loom' version '1.11-SNAPSHOT' // or latest stable version
+    id 'fabric-loom' version '1.9-SNAPSHOT'
     id 'maven-publish'
 }
 
@@ -22,6 +22,15 @@ repositories {
 			artifact() // Look directly for artifact
 		}
 	}
+
+	// theo
+	maven { url "https://theo.is-a.dev/maven/" }
+
+	// YACL
+	maven { url 'https://maven.isxander.dev/releases' }
+
+	// AmbleKit
+	maven { url "https://api.modrinth.com/maven" }
 }
 
 dependencies {
@@ -30,18 +39,29 @@ dependencies {
 	modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
 	modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
 
-    // Explicitly add networking API if needed
-    modImplementation 'net.fabricmc.fabric-api:fabric-networking-api-v1:0.91.0+1.20.1'
-
-    // GUI-related APIs (optional, but often useful)
-    modImplementation 'net.fabricmc.fabric-api:fabric-screen-api-v1:0.91.0+1.20.1'
-
     // duzos animator
     modImplementation files("libs/animator.jar")
 
 	// amblekit
 	modImplementation "com.github.amblelabs:ait:${project.ait_version}"
 	modImplementation("com.github.amblelabs:modkit:v${project.amblekit_version}")
+
+	// getter setter
+	compileOnly 'org.projectlombok:lombok:1.18.34'
+	annotationProcessor 'org.projectlombok:lombok:1.18.34'
+	testCompileOnly 'org.projectlombok:lombok:1.18.34'
+	testAnnotationProcessor 'org.projectlombok:lombok:1.18.34'
+
+	// theo
+	modImplementation "dev.drtheo:multidim:${project.multidim_version}"
+	modImplementation "dev.drtheo:scheduler:${project.scheduler_version}"
+	modImplementation "dev.drtheo:queue:${project.queue_version}"
+
+	// yacl
+	modImplementation "dev.isxander:yet-another-config-lib:${project.yacl_version}"
+
+	// other
+	include(implementation "net.objecthunter:exp4j:0.4.8")
 }
 
 loom {
@@ -50,4 +70,16 @@ loom {
 
 java {
     toolchain.languageVersion.set(JavaLanguageVersion.of(17))
+}
+
+def targetJavaVersion = 17
+tasks.withType(JavaCompile).configureEach {
+	// ensure that the encoding is set to UTF-8, no matter what the system default is
+	// this fixes some edge cases with special characters not displaying correctly
+	// see http://yodaconditions.net/blog/fix-for-java-file-encoding-problems-with-gradle.html
+	// If Javadoc is generated, this must be specified in that task too.
+	it.options.encoding = "UTF-8"
+	if (targetJavaVersion >= 10 || JavaVersion.current().isJava10Compatible()) {
+		it.options.release.set(targetJavaVersion)
+	}
 }

@@ -21,6 +21,9 @@
       "com.rhyno.timelordregen.datagen.RegenDataGen"
     ]
   },
+  "mixins": [
+    "regeneration.mixins.json"
+  ],
   "depends": {
     "fabricloader": ">=0.14.22",
     "fabric-api": "*"

@@ -1,5 +1,6 @@
 package com.rhyno.timelordregen.client.gui;
 
+import com.rhyno.timelordregen.api.RegenerationInfo;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.DrawContext;
@@ -9,8 +10,6 @@ import net.minecraft.client.gui.widget.SliderWidget;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.text.Text;
-import com.rhyno.timelordregen.regeneration.PlayerSettings;
-import com.rhyno.timelordregen.regeneration.RegenerationManager;
 import org.joml.Vector3f;
 
 public class RegenerationSettingsScreen extends Screen {
@@ -19,11 +18,13 @@ public class RegenerationSettingsScreen extends Screen {
     private ColorSlider greenSlider;
     private ColorSlider blueSlider;
     private Vector3f color;
+	private RegenerationInfo info;
 
     public RegenerationSettingsScreen(PlayerEntity player) {
         super(Text.literal("Regeneration Settings"));
         this.player = player;
-        this.color = PlayerSettings.getParticleColor(player.getUuid());
+        this.color = new Vector3f(); // TODO PlayerSettings.getParticleColor(player.getUuid());
+	    this.info = RegenerationInfo.get(player);
     }
 
     @Override
@@ -52,7 +53,7 @@ public class RegenerationSettingsScreen extends Screen {
                 greenSlider.getSliderValue(),
                 blueSlider.getSliderValue()
         );
-        PlayerSettings.setParticleColor(player.getUuid(), color);
+        // TODO PlayerSettings.setParticleColor(player.getUuid(), color);
     }
 
     private class ColorSlider extends SliderWidget {
@@ -85,7 +86,7 @@ public class RegenerationSettingsScreen extends Screen {
     public void render(DrawContext drawContext, int mouseX, int mouseY, float delta) {
         this.renderBackground(drawContext);
         drawCenteredText(drawContext.getMatrices(), this.textRenderer,
-                "Remaining Regenerations: " + RegenerationManager.getRegenerationsLeft(player),
+                "Remaining Regenerations: " + info.getUsesLeft(),
                 this.width / 2, this.height / 2 - 70, 0xFFFFFF);
         super.render(drawContext, mouseX, mouseY, delta);
     }
