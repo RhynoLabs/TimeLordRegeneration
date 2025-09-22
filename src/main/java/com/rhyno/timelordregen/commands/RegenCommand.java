@@ -1,9 +1,8 @@
 package com.rhyno.timelordregen.commands;
 
 import com.mojang.brigadier.CommandDispatcher;
+import com.rhyno.timelordregen.data.RegenerationInfo;
 import com.rhyno.timelordregen.network.Networking;
-import com.rhyno.timelordregen.regeneration.RegenerationManager;
-import net.minecraft.server.command.CommandManager;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.Text;
@@ -22,8 +21,13 @@ public class RegenCommand {
                     var player = context.getSource().getPlayer();
                     if (player == null) return 0;
 
-                    if (RegenerationManager.canRegenerate(player)) {
-                        RegenerationManager.triggerRegeneration(player);
+	                RegenerationInfo info = RegenerationInfo.get(player);
+	                if (info == null) {
+		                context.getSource().sendError(Text.literal("Regeneration data not found."));
+		                return 0;
+	                }
+
+                    if (info.tryStart(player)) {
                         context.getSource().sendFeedback(() -> Text.literal("Regeneration triggered!"), false);
                     } else {
                         context.getSource().sendError(Text.literal("No regenerations left or already regenerating."));
