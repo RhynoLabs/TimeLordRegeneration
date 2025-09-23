@@ -1,0 +1,24 @@
+{
+  "stages": {
+    "start": {
+        "reference": "sad_regen:sad_regen_start",
+        "duration": 12.8,
+        "unit": "seconds"
+    },
+    "loop": {
+      "reference": "sad_regen:sad_regen_loop",
+      "duration": 5,
+      "unit": "seconds"
+    },
+    "end": {
+      "reference": "sad_regen:sad_regen_end",
+      "duration": 12.48,
+      "unit": "seconds"
+    }
+  },
+  "skin_change": {
+    "stage": "loop",
+    "duration": 2.5,
+    "unit": "seconds"
+  }
+}

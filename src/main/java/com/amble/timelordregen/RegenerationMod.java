@@ -8,14 +8,14 @@ import com.amble.timelordregen.core.particle_effects.RegenParticleEffect;
 import com.amble.timelordregen.data.Attachments;
 import com.amble.timelordregen.api.RegenerationInfo;
 import com.amble.timelordregen.network.Networking;
-import com.mojang.serialization.Codec;
+import com.amble.timelordregen.animation.RegenAnimRegistry;
 import dev.amble.lib.container.RegistryContainer;
+import dev.amble.lib.register.AmbleRegistries;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
 import net.fabricmc.fabric.api.entity.event.v1.ServerLivingEntityEvents;
 import net.fabricmc.fabric.api.particle.v1.FabricParticleTypes;
 import net.minecraft.particle.DefaultParticleType;
-import net.minecraft.particle.ParticleEffect;
 import net.minecraft.particle.ParticleType;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
@@ -51,6 +51,8 @@ public class RegenerationMod implements ModInitializer {
         RegistryContainer.register(RegenerationModItemGroups.class, MOD_ID);
         RegistryContainer.register(RegenerationModBlocks.class, MOD_ID);
         RegistryContainer.register(RegenerationModItems.class, MOD_ID);
+
+	    AmbleRegistries.getInstance().registerAll(RegenAnimRegistry.getInstance());
 
 		// Register particles
 		registerParticles();

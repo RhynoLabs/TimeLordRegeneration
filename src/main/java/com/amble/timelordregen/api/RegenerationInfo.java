@@ -1,8 +1,12 @@
 package com.amble.timelordregen.api;
 
+import com.amble.timelordregen.animation.AnimationSet;
+import com.amble.timelordregen.animation.AnimationTemplate;
+import com.amble.timelordregen.animation.RegenAnimRegistry;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import com.amble.timelordregen.data.Attachments;
+import dev.amble.lib.animation.AnimatedEntity;
 import dev.amble.lib.skin.SkinData;
 import dev.drtheo.scheduler.api.TimeUnit;
 import dev.drtheo.scheduler.api.common.Scheduler;
@@ -13,37 +17,44 @@ import net.minecraft.entity.LivingEntity;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
+import net.minecraft.util.Identifier;
+import net.minecraft.util.math.MathHelper;
 
 public class RegenerationInfo {
 	public static final Codec<RegenerationInfo> CODEC = RecordCodecBuilder.create(instance -> instance.group(
 			Codec.INT.fieldOf("usesLeft").forGetter(RegenerationInfo::getUsesLeft),
-			Codec.BOOL.fieldOf("isRegenerating").forGetter(RegenerationInfo::isRegenerating)
+			Codec.BOOL.fieldOf("isRegenerating").forGetter(RegenerationInfo::isRegenerating),
+			Identifier.CODEC.fieldOf("animation").forGetter(RegenerationInfo::getAnimationId)
 	).apply(instance, RegenerationInfo::new));
 
 	public static final int MAX_REGENERATIONS = 12;
-	private static final int DURATION = 200; // TODO use animation library stuff instead of hardcode
 
 	@Getter
 	private int usesLeft;
 	@Getter @Setter
 	private boolean isRegenerating;
+	@Getter @Setter
+	private AnimationTemplate animation;
 
-	private RegenerationInfo(int usesLeft, boolean isRegenerating) {
+	private RegenerationInfo(int usesLeft, boolean isRegenerating, Identifier animation) {
 		this.usesLeft = usesLeft;
 		this.isRegenerating = isRegenerating;
+		this.animation = RegenAnimRegistry.getInstance().getOrFallback(animation);
 	}
 
 	/**
 	 * Default constructor for creating a new RegenerationInfo
 	 */
 	public RegenerationInfo() {
-		this(MAX_REGENERATIONS, false);
+		this(MAX_REGENERATIONS, false, RegenAnimRegistry.getInstance().getRandom().id());
+	}
+
+	public void setUsesLeft(int usesLeft) {
+		this.usesLeft = MathHelper.clamp(usesLeft, 0, MAX_REGENERATIONS);
 	}
 
 	public void decrement() {
-		if (usesLeft > 0) {
-			usesLeft--;
-		}
+		this.setUsesLeft(this.getUsesLeft() - 1);
 	}
 
 	public boolean tryStart(LivingEntity entity) {
@@ -55,8 +66,15 @@ public class RegenerationInfo {
 		entity.setHealth(entity.getMaxHealth());
 		entity.getWorld().playSound(null, entity.getBlockPos(), SoundEvents.ITEM_TOTEM_USE, SoundCategory.PLAYERS);
 
+		if (entity instanceof AnimatedEntity animated) {
+			AnimationSet set = this.animation.instantiate();
+			set.finish(() -> this.finish(entity));
+			set.start(animated);
+		} else {
+			Scheduler.get().runTaskLater(() -> this.finish(entity), TaskStage.END_SERVER_TICK, TimeUnit.SECONDS, 5);
+		}
+
 		RegenerationEvents.START.invoker().onStart(entity, this);
-		Scheduler.get().runTaskLater(() -> finish(entity), TaskStage.END_SERVER_TICK, TimeUnit.TICKS, DURATION);
 
 		return true;
 	}
@@ -64,12 +82,10 @@ public class RegenerationInfo {
 	private void finish(LivingEntity entity) {
 		this.setRegenerating(false);
 		RegenerationEvents.FINISH.invoker().onFinish(entity, this);
+	}
 
-		// TODO make better this is temporary for testing purposes
-		if (entity instanceof ServerPlayerEntity player) {
-			String[] usernames = new String[]{"duzo", "portal3i", "winndi", "loqor"};
-			SkinData.username((usernames[(int) (Math.random() * usernames.length)]), false).upload(player);
-		}
+	private Identifier getAnimationId() {
+		return this.animation.id();
 	}
 
 	public static RegenerationInfo get(LivingEntity entity) {
