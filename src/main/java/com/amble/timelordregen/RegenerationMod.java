@@ -4,13 +4,21 @@ import com.amble.timelordregen.commands.RegenCommand;
 import com.amble.timelordregen.core.RegenerationModBlocks;
 import com.amble.timelordregen.core.RegenerationModItemGroups;
 import com.amble.timelordregen.core.RegenerationModItems;
+import com.amble.timelordregen.core.particle_effects.RegenParticleEffect;
 import com.amble.timelordregen.data.Attachments;
 import com.amble.timelordregen.api.RegenerationInfo;
 import com.amble.timelordregen.network.Networking;
+import com.mojang.serialization.Codec;
 import dev.amble.lib.container.RegistryContainer;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
 import net.fabricmc.fabric.api.entity.event.v1.ServerLivingEntityEvents;
+import net.fabricmc.fabric.api.particle.v1.FabricParticleTypes;
+import net.minecraft.particle.DefaultParticleType;
+import net.minecraft.particle.ParticleEffect;
+import net.minecraft.particle.ParticleType;
+import net.minecraft.registry.Registries;
+import net.minecraft.registry.Registry;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.random.Random;
 import org.slf4j.Logger;
@@ -30,6 +38,10 @@ public class RegenerationMod implements ModInitializer {
             SoundEvent.of(REGEN_SOUND_ID)
     );*/
 
+	public static final ParticleType<RegenParticleEffect> RIGHT_REGEN_PARTICLE = FabricParticleTypes.complex(true, RegenParticleEffect.PARAMETERS_FACTORY);
+
+	public static final DefaultParticleType REGEN_HEAD_PARTICLE = FabricParticleTypes.simple();
+
     @Override
     public void onInitialize() {
 	    LOGGER.info("E Cineribus Resurgam.");
@@ -39,6 +51,9 @@ public class RegenerationMod implements ModInitializer {
         RegistryContainer.register(RegenerationModItemGroups.class, MOD_ID);
         RegistryContainer.register(RegenerationModBlocks.class, MOD_ID);
         RegistryContainer.register(RegenerationModItems.class, MOD_ID);
+
+		// Register particles
+		registerParticles();
 
         // Register commands
         CommandRegistrationCallback.EVENT.register((dispatcher, registryAccess, environment) -> {
@@ -58,5 +73,10 @@ public class RegenerationMod implements ModInitializer {
 
 	public static Identifier id(String path) {
 		return Identifier.of(MOD_ID, path);
+	}
+
+	public void registerParticles() {
+		Registry.register(Registries.PARTICLE_TYPE, id("right_regen_particle"), RIGHT_REGEN_PARTICLE);
+		Registry.register(Registries.PARTICLE_TYPE, id("regen_head_particle"), REGEN_HEAD_PARTICLE);
 	}
 }

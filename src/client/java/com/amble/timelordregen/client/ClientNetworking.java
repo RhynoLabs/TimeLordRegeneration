@@ -1,8 +1,10 @@
 package com.amble.timelordregen.client;
 
+import com.amble.timelordregen.RegenerationMod;
 import com.amble.timelordregen.client.gui.RegenerationSettingsScreen;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.entity.Entity;
 import net.minecraft.util.Identifier;
 
 public class ClientNetworking {

@@ -3,9 +3,7 @@ package com.amble.timelordregen.datagen;
 import com.amble.timelordregen.core.RegenerationModBlocks;
 import com.amble.timelordregen.core.RegenerationModItemGroups;
 import com.amble.timelordregen.core.RegenerationModItems;
-import com.amble.timelordregen.datagen.providers.RegenerationModAchivementProvider;
-import com.amble.timelordregen.datagen.providers.RegenerationModModelGen;
-import com.amble.timelordregen.datagen.providers.RegenerationRecipeProvider;
+import com.amble.timelordregen.datagen.providers.*;
 import dev.amble.lib.datagen.lang.AmbleLanguageProvider;
 import dev.amble.lib.datagen.lang.LanguageType;
 import dev.amble.lib.datagen.loot.AmbleBlockLootTable;
@@ -37,7 +35,8 @@ public class RegenDataGen implements DataGeneratorEntrypoint {
     }
 
     private void genTags(FabricDataGenerator.Pack pack) {
-        pack.addProvider((((output, registriesFuture) -> new AmbleBlockTagProvider(output, registriesFuture).withBlocks(RegenerationModBlocks.class))));
+        pack.addProvider(RegenerationBlockTagProvider::new);
+        pack.addProvider(RegenerationItemTagProvider::new);
     }
 
     private void genLoot(FabricDataGenerator.Pack pack) {
@@ -47,8 +46,23 @@ public class RegenDataGen implements DataGeneratorEntrypoint {
     private void genModels(FabricDataGenerator.Pack pack) {
         pack.addProvider(((output, registriesFuture) -> {
             RegenerationModModelGen provider = new RegenerationModModelGen(output);
-            provider.withBlocks(RegenerationModBlocks.class);
-            provider.withItems(RegenerationModItems.class);
+
+            // Yes this is confusing but oh well - Loqor
+            provider.registerLogBlock(RegenerationModBlocks.CADON_LOG, RegenerationModBlocks.CADON_WOOD);
+            provider.registerLogBlock(RegenerationModBlocks.STRIPPED_CADON_LOG, RegenerationModBlocks.STRIPPED_CADON_WOOD);
+            provider.registerBlockSet(new BlockSetRecord(
+                    RegenerationModBlocks.CADON_PLANKS,
+                    RegenerationModBlocks.CADON_STAIRS,
+                    RegenerationModBlocks.CADON_SLAB,
+                    RegenerationModBlocks.CADON_FENCE,
+                    RegenerationModBlocks.CADON_FENCE_GATE,
+                    RegenerationModBlocks.CADON_TRAPDOOR,
+                    RegenerationModBlocks.CADON_DOOR,
+                    RegenerationModBlocks.CADON_PRESSURE_PLATE,
+                    RegenerationModBlocks.CADON_BUTTON
+            ));
+            provider.registerSimpleBlock(RegenerationModBlocks.CADON_LEAVES);
+
             return provider;
         }));
     }

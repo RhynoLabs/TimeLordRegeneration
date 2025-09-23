@@ -43,7 +43,7 @@ dependencies {
     modImplementation files("libs/animator.jar")
 
 	// amblekit
-	modImplementation "com.github.amblelabs:ait:${project.ait_version}"
+	modCompileOnlyApi "com.github.amblelabs:ait:${project.ait_version}"
 	modImplementation "com.github.amblelabs:modkit:${project.use_amblekit_dev ? project.amblekit_dev_version : project.amblekit_version}"
 
 	// getter setter
@@ -65,7 +65,31 @@ dependencies {
 }
 
 loom {
+	// accessWidenerPath = file("src/main/resources/timelordregen.accesswidener")
+
+	runs {
+		datagen {
+			inherit server
+			name "Data Generation"
+			vmArg "-Dfabric-api.datagen"
+			vmArg "-Dfabric-api.datagen.output-dir=${file("src/main/generated")}"
+			vmArg "-Dfabric-api.datagen.modid=timelordregen"
+
+			runDir "build/datagen"
+		}
+	}
     splitEnvironmentSourceSets()
+}
+
+// Add the generated resources to the main source set
+sourceSets {
+	main {
+		resources {
+			srcDirs += [
+					"src/main/generated"
+			]
+		}
+	}
 }
 
 java {

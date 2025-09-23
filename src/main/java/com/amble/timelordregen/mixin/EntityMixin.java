@@ -5,15 +5,23 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.MovementType;
 import net.minecraft.entity.damage.DamageSource;
+import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.math.Vec3d;
+import net.minecraft.world.World;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
+import util.ParticleUtil;
 
 @Mixin(Entity.class)
 public class EntityMixin {
+
+	@Unique
+	private static ParticleUtil PARTICLE_UTIL = new ParticleUtil(true);
+
 	@Inject(method = "damage", at = @At("HEAD"), cancellable = true)
 	private void regeneration$damage(DamageSource source, float amount, CallbackInfoReturnable<Boolean> cir) {
 		if (!(((Object) this) instanceof LivingEntity)) return;
@@ -29,6 +37,20 @@ public class EntityMixin {
 			cir.cancel();
 		}
 	}
+
+	@Inject(method = "tick", at = @At("TAIL"))
+	private void regeneration$tick(CallbackInfo ci) {
+		if (!(((Object) this) instanceof LivingEntity)) return;
+		LivingEntity entity = (LivingEntity) (Object) this;
+
+		if (entity == null) return;
+
+		World world = entity.getWorld();
+
+		if (world instanceof ServerWorld serverWorld) {
+			PARTICLE_UTIL.spawnParticles(entity, serverWorld);
+		}
+    }
 
 	@Inject(method = "move", at = @At("HEAD"), cancellable = true)
 	private void regeneration$move(MovementType movementType, Vec3d movement, CallbackInfo ci) {
