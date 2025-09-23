@@ -4,21 +4,21 @@
   "version": "1.0.0",
   "name": "Time Lord Regeneration",
   "description": "A Doctor Who regeneration mod.",
-  "authors": ["ThatRhynoGuy"],
+  "authors": ["AmbleLabs"],
   "contact": {
-    "sources": "https://github.com/RhynoLabs/TimeLordRegeneration"
+    "sources": "https://github.com/AmbleLabs/TimeLordRegeneration"
   },
   "license": "MIT",
   "environment": "*",
   "entrypoints": {
     "main": [
-      "com.rhyno.timelordregen.RegenerationMod"
+      "com.amble.timelordregen.RegenerationMod"
     ],
     "client": [
-      "com.rhyno.timelordregen.client.RegenerationClientMod"
+      "com.amble.timelordregen.client.RegenerationClientMod"
     ],
     "fabric-datagen": [
-      "com.rhyno.timelordregen.datagen.RegenDataGen"
+      "com.amble.timelordregen.datagen.RegenDataGen"
     ]
   },
   "mixins": [
