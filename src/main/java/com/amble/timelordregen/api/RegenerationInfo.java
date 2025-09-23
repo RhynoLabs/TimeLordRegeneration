@@ -75,16 +75,4 @@ public class RegenerationInfo {
 	public static RegenerationInfo get(LivingEntity entity) {
 		return entity.getAttachedOrCreate(Attachments.REGENERATION);
 	}
-
-	public int getUsesLeft() {
-		return this.usesLeft;
-	}
-
-	public boolean isRegenerating() {
-		return this.isRegenerating;
-	}
-
-	public void setRegenerating(boolean regenerating) {
-		this.isRegenerating = regenerating;
-	}
 }
