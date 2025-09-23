@@ -3,7 +3,6 @@ package com.amble.timelordregen.datagen.providers;
 import dev.amble.ait.AITMod;
 import dev.amble.ait.core.AITBlocks;
 import dev.amble.ait.core.AITItems;
-import dev.amble.ait.module.ModuleRegistry;
 import dev.amble.lib.datagen.model.AmbleModelProvider;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.minecraft.block.Block;
@@ -82,23 +81,11 @@ public class RegenerationModModelGen extends AmbleModelProvider {
             );
         }
 
-        ModuleRegistry.instance().iterator().forEachRemaining(module -> {
-            module.getDataGenerator().ifPresent(data -> data.models(this, generator));
-            module.getBlockRegistry().ifPresent(this::withBlocks);
-        });
-
         super.generateBlockStateModels(generator);
     }
 
     @Override
     public void generateItemModels(ItemModelGenerator generator) {
-        ModuleRegistry.instance().iterator().forEachRemaining(module -> {
-            module.getItemRegistry().ifPresent(this::withItems);
-            module.getBlockRegistry().ifPresent(this::withBlocks);
-            module.getDataGenerator().ifPresent(data -> data.generateItemModels(this, generator));
-        });
-
-
         super.generateItemModels(generator);
     }
 
