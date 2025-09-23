@@ -3,12 +3,14 @@ package com.amble.timelordregen.api;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import com.amble.timelordregen.data.Attachments;
+import dev.amble.lib.skin.SkinData;
 import dev.drtheo.scheduler.api.TimeUnit;
 import dev.drtheo.scheduler.api.common.Scheduler;
 import dev.drtheo.scheduler.api.common.TaskStage;
 import lombok.Getter;
 import lombok.Setter;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
 
@@ -62,6 +64,12 @@ public class RegenerationInfo {
 	private void finish(LivingEntity entity) {
 		this.setRegenerating(false);
 		RegenerationEvents.FINISH.invoker().onFinish(entity, this);
+
+		// TODO make better this is temporary for testing purposes
+		if (entity instanceof ServerPlayerEntity player) {
+			String[] usernames = new String[]{"duzo", "portal3i", "winndi", "loqor"};
+			SkinData.username((usernames[(int) (Math.random() * usernames.length)]), false).upload(player);
+		}
 	}
 
 	public static RegenerationInfo get(LivingEntity entity) {

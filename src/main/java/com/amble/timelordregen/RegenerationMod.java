@@ -49,7 +49,10 @@ public class RegenerationMod implements ModInitializer {
 
 	    ServerLivingEntityEvents.ALLOW_DEATH.register((entity, damageSource, damageAmount) -> {
 		    RegenerationInfo info = RegenerationInfo.get(entity);
-			return info == null || !info.isRegenerating();
+
+			if (info == null) return true;
+
+			return !info.tryStart(entity);
 	    });
 	}
 
