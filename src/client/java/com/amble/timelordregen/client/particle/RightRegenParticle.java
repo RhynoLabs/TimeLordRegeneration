@@ -48,7 +48,7 @@ public class RightRegenParticle extends ExplosionSmokeParticle {
 
         this.angle = (float) Math.random() * 6.2831855F;
         this.prevAngle = this.angle;
-        this.alpha = 0.8f + (float) Math.random() * 0.2f;
+        this.alpha = 0.4f + (float) Math.random() * 0.2f;
         this.scale *= 0.5f;
         this.setColor(1f, 0.9f, 0.9f);
         this.maxAge = this.random.nextInt(4) + 10;
@@ -72,7 +72,7 @@ public class RightRegenParticle extends ExplosionSmokeParticle {
         }
         if (!(this.alpha <= 0.0F)) {
             if (this.alpha > 0.01F) {
-                this.alpha -= 0.01F;
+                this.alpha -= 0.03F;
             }
         } else {
             this.markDead();

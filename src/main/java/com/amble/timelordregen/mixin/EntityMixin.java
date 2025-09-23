@@ -8,6 +8,7 @@ import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
+import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
@@ -20,9 +21,10 @@ import util.ParticleUtil;
 public class EntityMixin {
 
 	@Unique
-	private static ParticleUtil PARTICLE_UTIL = new ParticleUtil(true);
+	@Final
+	private static final ParticleUtil PARTICLE_UTIL = new ParticleUtil(true);
 
-	@Inject(method = "damage", at = @At("HEAD"), cancellable = true)
+	@Inject(method = "damage(Lnet/minecraft/entity/damage/DamageSource;F)Z", at = @At("HEAD"), cancellable = true)
 	private void regeneration$damage(DamageSource source, float amount, CallbackInfoReturnable<Boolean> cir) {
 		if (!(((Object) this) instanceof LivingEntity)) return;
 		LivingEntity entity = (LivingEntity) (Object) this;
@@ -38,7 +40,7 @@ public class EntityMixin {
 		}
 	}
 
-	@Inject(method = "tick", at = @At("TAIL"))
+	@Inject(method = "tick()V", at = @At("TAIL"))
 	private void regeneration$tick(CallbackInfo ci) {
 		if (!(((Object) this) instanceof LivingEntity)) return;
 		LivingEntity entity = (LivingEntity) (Object) this;
@@ -52,7 +54,7 @@ public class EntityMixin {
 		}
     }
 
-	@Inject(method = "move", at = @At("HEAD"), cancellable = true)
+	@Inject(method = "move(Lnet/minecraft/entity/MovementType;Lnet/minecraft/util/math/Vec3d;)V", at = @At("HEAD"), cancellable = true)
 	private void regeneration$move(MovementType movementType, Vec3d movement, CallbackInfo ci) {
 		if (!(((Object) this) instanceof LivingEntity)) return;
 		LivingEntity entity = (LivingEntity) (Object) this;

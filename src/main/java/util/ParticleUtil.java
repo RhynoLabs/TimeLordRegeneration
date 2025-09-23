@@ -1,19 +1,26 @@
 package util;
 
 import com.amble.timelordregen.core.particle_effects.RegenParticleEffect;
+import dev.amble.lib.animation.AnimatedEntity;
+import dev.amble.lib.client.bedrock.BedrockAnimationReference;
 import net.minecraft.block.StonecutterBlock;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.server.world.ServerWorld;
+import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 
 public class ParticleUtil {
     private final boolean hasHead;
+    private static final Identifier REGEN_ANIMATION = new Identifier("sad_regen", "sad_regen_loop");
     public ParticleUtil(boolean hasHead) {
         this.hasHead = hasHead;
     }
 
     public void spawnParticles(LivingEntity entity, ServerWorld serverWorld) {
         if (!(serverWorld.getBlockState(BlockPos.ofFloored(entity.getPos())).getBlock() instanceof StonecutterBlock)) return;
+
+        /*if (!((AnimatedEntity) entity).getAnimationState().isRunning())
+            ((AnimatedEntity) entity).playAnimation(BedrockAnimationReference.parse(REGEN_ANIMATION));*/
 
         float yaw = entity.getYaw() * ((float) Math.PI / 180F);
         double cos = Math.cos(yaw);
