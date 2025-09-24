@@ -21,7 +21,7 @@ public class RegenerationSettingsScreen extends Screen {
 	private RegenerationInfo info;
 
     public RegenerationSettingsScreen(PlayerEntity player) {
-        super(Text.literal("Regeneration Settings"));
+        super(Text.translatable("gui.regen.settings.title"));
         this.player = player;
         this.color = new Vector3f(); // TODO PlayerSettings.getParticleColor(player.getUuid());
 	    this.info = RegenerationInfo.get(player);
@@ -86,7 +86,7 @@ public class RegenerationSettingsScreen extends Screen {
     public void render(DrawContext drawContext, int mouseX, int mouseY, float delta) {
         this.renderBackground(drawContext);
         drawCenteredText(drawContext.getMatrices(), this.textRenderer,
-                "Remaining Regenerations: " + info.getUsesLeft(),
+                Text.translatable("gui.regen.settings.remaining" + info.getUsesLeft(),
                 this.width / 2, this.height / 2 - 70, 0xFFFFFF);
         super.render(drawContext, mouseX, mouseY, delta);
     }
