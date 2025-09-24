@@ -67,7 +67,7 @@ public class RegenerationInfo {
 		entity.getWorld().playSound(null, entity.getBlockPos(), SoundEvents.ITEM_TOTEM_USE, SoundCategory.PLAYERS);
 
 		if (entity instanceof AnimatedEntity animated) {
-			AnimationSet set = this.animation.instantiate();
+			AnimationSet set = this.animation.instantiate(true); // todo config option for skin change
 			set.finish(() -> this.finish(entity));
 			set.start(animated);
 		} else {

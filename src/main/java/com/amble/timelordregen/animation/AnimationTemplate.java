@@ -68,16 +68,16 @@ public class AnimationTemplate extends EnumMap<AnimationTemplate.Stage, Animatio
 		this.putAll(map);
 	}
 
-	public AnimationSet instantiate() {
+	public AnimationSet instantiate(boolean skinChange) {
 		AnimationSet set = new AnimationSet(this);
 
-		if (this.skinChange != null) {
+		if (skinChange && this.skinChange != null) {
 			set.callback(this.skinChange.stage(), stage -> {
 				Scheduler.get().runTaskLater(() -> {
 					// TODO make better
 					if (set.getTarget() instanceof ServerPlayerEntity player) {
 						String[] usernames = new String[]{"duzo", "portal3i", "winndi", "loqor"};
-						SkinData.username((usernames[(int) (Math.random() * usernames.length)]), false).upload(player);
+						SkinData.username((usernames[(int) (Math.random() * usernames.length)]), RegenerationMod.RANDOM.nextBoolean()).upload(player);
 					}
 				}, TaskStage.END_SERVER_TICK, this.skinChange.unit(), this.skinChange.duration());
 			});
