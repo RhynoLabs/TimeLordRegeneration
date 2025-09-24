@@ -86,7 +86,7 @@ public class RegenerationSettingsScreen extends Screen {
     public void render(DrawContext drawContext, int mouseX, int mouseY, float delta) {
         this.renderBackground(drawContext);
         drawCenteredText(drawContext.getMatrices(), this.textRenderer,
-                Text.translatable("gui.regen.settings.remaining" + info.getUsesLeft(),
+                Text.translatable("gui.regen.settings.remaining", info.getUsesLeft()).getString(),
                 this.width / 2, this.height / 2 - 70, 0xFFFFFF);
         super.render(drawContext, mouseX, mouseY, delta);
     }

@@ -83,7 +83,7 @@ public class RegenDataGen implements DataGeneratorEntrypoint {
 
             // GUI
             provider.addTranslation("gui.regen.settings.title","Regeneration Settings");
-            provider.addTranslation("gui.regen.settings.remaining","Remaining Regenerations: ");
+            provider.addTranslation("gui.regen.settings.remaining","Remaining Regenerations: %s");
 
             // Item Groups
             provider.addTranslation(RegenerationModItemGroups.REGEN,"Regeneration Mod");
