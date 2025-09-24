@@ -3,6 +3,7 @@ package com.amble.timelordregen.core.particle_effects;
 import com.amble.timelordregen.RegenerationMod;
 import com.mojang.brigadier.StringReader;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
+import lombok.Getter;
 import net.minecraft.entity.Entity;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.particle.ParticleEffect;
@@ -11,15 +12,19 @@ import net.minecraft.world.World;
 
 public class RegenParticleEffect implements ParticleEffect {
     private final int entityId;
+    @Getter
     private final float yawOffset;
+    @Getter
     private final float pitchOffset;
     private final boolean shouldPitch;
+    private final boolean shouldFollowPlayer;
 
-    public RegenParticleEffect(int entityId, float yawOffset, float pitchOffset, boolean shouldPitch) {
+    public RegenParticleEffect(int entityId, float yawOffset, float pitchOffset, boolean shouldPitch, boolean shouldFollowPlayer) {
         this.entityId = entityId;
         this.yawOffset = yawOffset;
         this.pitchOffset = pitchOffset;
         this.shouldPitch = shouldPitch;
+        this.shouldFollowPlayer = shouldFollowPlayer;
     }
 
     public RegenParticleEffect() {
@@ -27,6 +32,7 @@ public class RegenParticleEffect implements ParticleEffect {
         this.yawOffset = 0;
         this.pitchOffset = 0;
         this.shouldPitch = true;
+        this.shouldFollowPlayer = true;
     }
 
     public static final Factory<RegenParticleEffect> PARAMETERS_FACTORY = new Factory<>() {
@@ -36,7 +42,8 @@ public class RegenParticleEffect implements ParticleEffect {
             float yawOffset = stringReader.readFloat();
             float pitchOffset = stringReader.readFloat();
             boolean shouldPitch = stringReader.readBoolean();
-            return new RegenParticleEffect(entityId, yawOffset, pitchOffset, shouldPitch);
+            boolean shouldFollowPlayer = stringReader.readBoolean();
+            return new RegenParticleEffect(entityId, yawOffset, pitchOffset, shouldPitch, shouldFollowPlayer);
         }
 
         @Override
@@ -45,7 +52,8 @@ public class RegenParticleEffect implements ParticleEffect {
             float yawOffset = packetByteBuf.readFloat();
             float pitchOffset = packetByteBuf.readFloat();
             boolean shouldPitch = packetByteBuf.readBoolean();
-            return new RegenParticleEffect(entityId, yawOffset, pitchOffset, shouldPitch);
+            boolean shouldFollowPlayer = packetByteBuf.readBoolean();
+            return new RegenParticleEffect(entityId, yawOffset, pitchOffset, shouldPitch, shouldFollowPlayer);
         }
     };
 
@@ -55,11 +63,12 @@ public class RegenParticleEffect implements ParticleEffect {
         buf.writeFloat(yawOffset);
         buf.writeFloat(pitchOffset);
         buf.writeBoolean(shouldPitch);
+        buf.writeBoolean(shouldFollowPlayer);
     }
 
     @Override
     public String asString() {
-        return entityId + " " + yawOffset + " " + pitchOffset + " " + shouldPitch;
+        return entityId + " " + yawOffset + " " + pitchOffset + " " + shouldPitch + " " + shouldFollowPlayer;
     }
 
     public Entity getEntity(World world) {
@@ -70,15 +79,11 @@ public class RegenParticleEffect implements ParticleEffect {
         return RegenerationMod.RIGHT_REGEN_PARTICLE;
     }
 
-    public float getYawOffset() {
-        return this.yawOffset;
-    }
-
-    public float getPitchOffset() {
-        return this.pitchOffset;
-    }
-
     public boolean getShouldPitch() {
         return this.shouldPitch;
+    }
+
+    public boolean getShouldFollowPlayer() {
+        return this.shouldFollowPlayer;
     }
 }

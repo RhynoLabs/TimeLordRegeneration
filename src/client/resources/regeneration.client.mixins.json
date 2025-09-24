@@ -3,6 +3,7 @@
   "package": "com.amble.timelordregen.client.mixin",
   "compatibilityLevel": "JAVA_17",
   "client": [
+    "PlayerEntityModelMixin"
   ],
   "injectors": {
     "defaultRequire": 1

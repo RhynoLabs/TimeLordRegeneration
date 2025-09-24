@@ -17,7 +17,7 @@ public class RightRegenParticle extends ExplosionSmokeParticle {
     private final SpriteProvider spriteProvider;
 
     RightRegenParticle(ClientWorld clientWorld, double d, double e, double f, SpriteProvider spriteProvider, Entity entity,
-                       float yawOffset, float pitchOffset, boolean shouldPitch) {
+                       float yawOffset, float pitchOffset, boolean shouldPitch, boolean shouldFollowPlayer) {
         super(clientWorld, d, e, f, 0, 0, 0, spriteProvider);
         this.spriteProvider = spriteProvider;
 
@@ -25,8 +25,8 @@ public class RightRegenParticle extends ExplosionSmokeParticle {
         this.gravityStrength = 0.01f;
         this.velocityMultiplier = 0.999f;
 
-        float yawRad = (float) Math.toRadians(player.headYaw + yawOffset);
-        float pitchRad = shouldPitch ? (float) Math.toRadians(player.getPitch() + pitchOffset) : 0f;
+        float yawRad = (float) Math.toRadians(shouldFollowPlayer ? (player.headYaw + yawOffset) : yawOffset);
+        float pitchRad = shouldPitch ? (float) Math.toRadians(shouldFollowPlayer ? (player.getPitch() + pitchOffset) : pitchOffset) : 0f;
 
         double dirX = -Math.sin(yawRad) * Math.cos(pitchRad);
         double dirY = shouldPitch ? -Math.sin(pitchRad) : 0;
@@ -90,7 +90,7 @@ public class RightRegenParticle extends ExplosionSmokeParticle {
         @Override
         public @Nullable Particle createParticle(RegenParticleEffect regenParticle, ClientWorld world, double x, double y, double z, double velocityX, double velocityY, double velocityZ) {
             RightRegenParticle rightRegenParticle = new RightRegenParticle(world, x, y, z, this.spriteProvider,
-                    regenParticle.getEntity(world), regenParticle.getYawOffset(), regenParticle.getPitchOffset(), regenParticle.getShouldPitch());
+                    regenParticle.getEntity(world), regenParticle.getYawOffset(), regenParticle.getPitchOffset(), regenParticle.getShouldPitch(), regenParticle.getShouldFollowPlayer());
             rightRegenParticle.setSprite(this.spriteProvider);
             return rightRegenParticle;
         }
