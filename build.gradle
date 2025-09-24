@@ -40,7 +40,7 @@ dependencies {
 	modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
 
 	// amblekit
-	modImplementation "com.github.amblelabs:ait:${project.ait_version}"
+	modCompileOnlyApi "com.github.amblelabs:ait:${project.ait_version}"
 	modImplementation "com.github.amblelabs:modkit:${project.use_amblekit_dev ? project.amblekit_dev_version : project.amblekit_version}"
 
 	// getter setter
