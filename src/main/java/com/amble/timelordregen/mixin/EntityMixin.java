@@ -24,7 +24,7 @@ public class EntityMixin {
 	@Final
 	private static final ParticleUtil PARTICLE_UTIL = new ParticleUtil(true);
 
-	@Inject(method = "damage(Lnet/minecraft/entity/damage/DamageSource;F)Z", at = @At("HEAD"), cancellable = true)
+	@Inject(method = "damage", at = @At("HEAD"), cancellable = true)
 	private void regeneration$damage(DamageSource source, float amount, CallbackInfoReturnable<Boolean> cir) {
 		if (!(((Object) this) instanceof LivingEntity)) return;
 		LivingEntity entity = (LivingEntity) (Object) this;
