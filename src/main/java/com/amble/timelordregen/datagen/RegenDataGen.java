@@ -74,6 +74,13 @@ public class RegenDataGen implements DataGeneratorEntrypoint {
 		pack.addProvider((((output, registry) -> {
 			AmbleLanguageProvider provider = new AmbleLanguageProvider(output, LanguageType.EN_US);
 
+            // Commands
+            provider.addTranslation("command.regen.name","regen");
+            provider.addTranslation("command.regenui.name","regenui");
+            provider.addTranslation("command.regen.data.error","Regeneration data not found.");
+            provider.addTranslation("command.regen.triggered","Regeneration triggered!");
+            provider.addTranslation("command.regen.fail","No regenerations left or already regenerating.");
+
             // Item Groups
             provider.addTranslation(RegenerationModItemGroups.REGEN,"Regeneration Mod");
 

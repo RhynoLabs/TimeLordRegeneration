@@ -15,7 +15,7 @@ public class RegenCommand {
 
     public static void register(CommandDispatcher<ServerCommandSource> dispatcher) {
         // Register /regen command
-        dispatcher.register(literal("regen")
+        dispatcher.register(literal(Text.translatable("command.regen.name").getString())
                 .requires(source -> source.hasPermissionLevel(0)) // Allow all players
                 .executes(context -> {
                     var player = context.getSource().getPlayer();
@@ -23,21 +23,21 @@ public class RegenCommand {
 
 	                RegenerationInfo info = RegenerationInfo.get(player);
 	                if (info == null) {
-		                context.getSource().sendError(Text.literal("Regeneration data not found."));
+		                context.getSource().sendError(Text.translatable("command.regen.data.error"));
 		                return 0;
 	                }
 
                     if (info.tryStart(player)) {
-                        context.getSource().sendFeedback(() -> Text.literal("Regeneration triggered!"), false);
+                        context.getSource().sendFeedback(() -> Text.translatable("command.regen.triggered"), false);
                     } else {
-                        context.getSource().sendError(Text.literal("No regenerations left or already regenerating."));
+                        context.getSource().sendError(Text.translatable("command.regen.fail") );
                     }
                     return 1;
                 })
         );
 
         // Register /regenui command
-        dispatcher.register(literal("regenui")
+        dispatcher.register(literal(Text.translatable("command.regenui.name").getString())
                 .requires(source -> source.hasPermissionLevel(0))
                 .executes(context -> {
                     ServerPlayerEntity player = context.getSource().getPlayer();
