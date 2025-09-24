@@ -1,14 +1,11 @@
 {
   "sad_regen_start": {
-    "movement": false,
-    "perspective": "third_person_front"
+    "movement": false
   },
   "sad_regen_loop": {
-    "movement": false,
-    "perspective": "third_person_front"
+    "movement": false
   },
   "sad_regen_end": {
-    "movement": false,
-    "perspective": "third_person_front"
+    "movement": false
   }
 }
