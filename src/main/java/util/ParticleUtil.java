@@ -1,12 +1,9 @@
 package util;
 
-import com.amble.timelordregen.core.particle_effects.RegenParticleEffect;
-import dev.amble.lib.animation.AnimatedEntity;
-import dev.amble.lib.client.bedrock.BedrockAnimationReference;
+import dev.amble.timelordregen.core.particle_effects.RegenParticleEffect;
 import net.minecraft.block.StonecutterBlock;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.server.world.ServerWorld;
-import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 
 public class ParticleUtil {

@@ -12,21 +12,17 @@
   "environment": "*",
   "entrypoints": {
     "main": [
-      "com.amble.timelordregen.RegenerationMod"
+      "dev.amble.timelordregen.RegenerationMod"
     ],
     "client": [
-      "com.amble.timelordregen.client.RegenerationClientMod"
+      "dev.amble.timelordregen.client.RegenerationClientMod"
     ],
     "fabric-datagen": [
-      "com.amble.timelordregen.datagen.RegenDataGen"
+      "dev.amble.timelordregen.datagen.RegenDataGen"
     ]
   },
   "mixins": [
-    "regeneration.mixins.json",
-    {
-      "config": "regeneration.client.mixins.json",
-      "environment": "client"
-    }
+    "regeneration.mixins.json"
   ],
   "depends": {
     "fabricloader": ">=0.14.22",

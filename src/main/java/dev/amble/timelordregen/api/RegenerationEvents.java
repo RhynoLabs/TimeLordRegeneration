@@ -1,0 +1,52 @@
+package dev.amble.timelordregen.api;
+
+import dev.amble.timelordregen.animation.AnimationTemplate;
+import net.fabricmc.fabric.api.event.Event;
+import net.fabricmc.fabric.api.event.EventFactory;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.LivingEntity;
+
+public final class RegenerationEvents {
+	/**
+	 * Called when a player starts to regenerate
+	 */
+	public static final Event<Start> START = EventFactory.createArrayBacked(Start.class, callbacks -> (player, data) -> {
+		for (Start callback : callbacks) {
+			callback.onStart(player, data);
+		}
+	});
+
+	/**
+	 * Called when a player finishes regeneration
+	 */
+	public static final Event<Finish> FINISH = EventFactory.createArrayBacked(Finish.class, callbacks -> (player, data) -> {
+		for (Finish callback : callbacks) {
+			callback.onFinish(player, data);
+		}
+	});
+
+	/**
+	 * Called when a player's regeneration stage changes
+	 */
+	public static final Event<ChangeStage> CHANGE_STAGE = EventFactory.createArrayBacked(ChangeStage.class, callbacks -> (entity, data, stage) -> {
+		for (ChangeStage callback : callbacks) {
+			callback.onStateChange(entity, data, stage);
+		}
+	});
+
+
+	@FunctionalInterface
+	public interface Start {
+		void onStart(Entity player, RegenerationInfo data);
+	}
+
+	@FunctionalInterface
+	public interface Finish { // ( Loqor couldnt. )
+		void onFinish(Entity player, RegenerationInfo data);
+	}
+
+	@FunctionalInterface
+	public interface ChangeStage {
+		void onStateChange(LivingEntity entity, RegenerationInfo data, AnimationTemplate.Stage stage);
+	}
+}
