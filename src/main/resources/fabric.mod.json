@@ -22,7 +22,11 @@
     ]
   },
   "mixins": [
-    "regeneration.mixins.json"
+    "regeneration.mixins.json",
+    {
+      "config": "regeneration.client.mixins.json",
+      "environment": "client"
+    }
   ],
   "depends": {
     "fabricloader": ">=0.14.22",
