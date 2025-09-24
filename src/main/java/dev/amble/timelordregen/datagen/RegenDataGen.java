@@ -8,7 +8,6 @@ import dev.amble.lib.datagen.lang.AmbleLanguageProvider;
 import dev.amble.lib.datagen.lang.LanguageType;
 import dev.amble.lib.datagen.loot.AmbleBlockLootTable;
 import dev.amble.lib.datagen.sound.AmbleSoundProvider;
-import dev.amble.timelordregen.datagen.providers.*;
 import net.fabricmc.fabric.api.datagen.v1.DataGeneratorEntrypoint;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataGenerator;
 
@@ -21,12 +20,12 @@ public class RegenDataGen implements DataGeneratorEntrypoint {
         genModels(pack);
         generateRecipes(pack);
         generateSoundData(pack);
-        generateAchivement(pack);
+        generateAchievement(pack);
         genTags(pack);
         genLoot(pack);
 	}
 
-    private void generateAchivement(FabricDataGenerator.Pack pack) {
+    private void generateAchievement(FabricDataGenerator.Pack pack) {
         pack.addProvider(RegenerationModAchivementProvider::new);
     }
 
@@ -106,6 +105,10 @@ public class RegenDataGen implements DataGeneratorEntrypoint {
             provider.addTranslation(RegenerationModBlocks.CADON_TRAPDOOR, "Cadon Trapdoor");
             provider.addTranslation(RegenerationModBlocks.CADON_PRESSURE_PLATE, "Cadon Pressure Plate");
             provider.addTranslation(RegenerationModBlocks.CADON_BUTTON, "Cadon Button");
+
+			// Advancements
+			provider.addTranslation("achievement.timelordregen.title.regeneration", "Change, my dear.");
+			provider.addTranslation("achievement.timelordregen.description.regeneration", "Regenerate for the first time!");
 
 			return provider;
 		})));

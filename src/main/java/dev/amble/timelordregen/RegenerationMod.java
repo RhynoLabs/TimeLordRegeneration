@@ -1,5 +1,6 @@
 package dev.amble.timelordregen;
 
+import dev.amble.timelordregen.advancement.RegenerationCriterions;
 import dev.amble.timelordregen.commands.RegenCommand;
 import dev.amble.timelordregen.compat.Compat;
 import dev.amble.timelordregen.core.RegenerationModBlocks;
@@ -64,8 +65,8 @@ public class RegenerationMod implements ModInitializer {
 
         // Init regeneration manager
 		RegenerationInfo.init();
-
 	    Compat.init();
+	    RegenerationCriterions.init();
 	}
 
 	public static Identifier id(String path) {

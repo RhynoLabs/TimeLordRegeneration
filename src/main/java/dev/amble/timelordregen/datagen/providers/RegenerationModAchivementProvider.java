@@ -1,8 +1,15 @@
 package dev.amble.timelordregen.datagen.providers;
 
+import dev.amble.ait.core.AITItemGroups;
+import dev.amble.ait.core.AITItems;
+import dev.amble.timelordregen.RegenerationMod;
+import dev.amble.timelordregen.advancement.RegenerationCriterions;
+import dev.amble.timelordregen.core.RegenerationModItems;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricAdvancementProvider;
 import net.minecraft.advancement.Advancement;
+import net.minecraft.advancement.AdvancementFrame;
+import net.minecraft.text.Text;
 
 import java.util.function.Consumer;
 
@@ -13,6 +20,11 @@ public class RegenerationModAchivementProvider extends FabricAdvancementProvider
 
     @Override
     public void generateAdvancement(Consumer<Advancement> consumer) {
-
+		Advancement regeneration = Advancement.Builder.create()
+				.display(RegenerationModItems.ELIXIR_OF_LIFE, Text.translatable("achievement.timelordregen.title.regeneration"),
+						Text.translatable("achievement.timelordregen.description.regeneration"),
+						null, AdvancementFrame.GOAL, true, true, false)
+				.criterion("first_regeneration", RegenerationCriterions.FIRST_REGENERATION.conditions())
+				.build(consumer, RegenerationMod.MOD_ID + "/first_regeneration");
     }
 }
