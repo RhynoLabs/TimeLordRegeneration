@@ -66,7 +66,7 @@ public class RegenerationInfo {
 
 			if (info == null) return true;
 
-			return !info.tryStart(entity)/* && !info.isRegenerating()*/;
+			return !info.tryStart(entity) && !info.isRegenerating();
 		});
 	}
 
