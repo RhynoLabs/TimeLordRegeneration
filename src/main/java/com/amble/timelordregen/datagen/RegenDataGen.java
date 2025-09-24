@@ -82,7 +82,7 @@ public class RegenDataGen implements DataGeneratorEntrypoint {
             provider.addTranslation("command.regen.fail","No regenerations left or already regenerating.");
 
             // GUI
-            provider.addTranslation("gui.regen.settings.titlel","Regeneration Settings");
+            provider.addTranslation("gui.regen.settings.title","Regeneration Settings");
             provider.addTranslation("gui.regen.settings.remaining","Remaining Regenerations: ");
 
             // Item Groups
