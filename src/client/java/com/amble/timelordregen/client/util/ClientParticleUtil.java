@@ -32,11 +32,11 @@ public class ClientParticleUtil {
             Vec3d worldPosition = livingEntity.getPos()
                     .add(modelPosition).multiply(1, 1, 1);
 
-            System.out.println(modelPosition);
+            //System.out.println(modelPosition);
 
             for (int x = 0; x < 1; x++) {
-                clientWorld.addParticle(new RegenParticleEffect(livingEntity.getId(), (float) modelRotation.getY(), (float) modelRotation.getX(), true, false),
-                        worldPosition.getX(), worldPosition.getY() + 1.5f, worldPosition.getZ(), 0, 0, 0);
+                /*clientWorld.addParticle(new RegenParticleEffect(livingEntity.getId(), (float) modelRotation.getY(), (float) modelRotation.getX(), true, false),
+                        worldPosition.getX(), worldPosition.getY() + 1.5f, worldPosition.getZ(), 0, 0, 0);*/
                 /*clientWorld.addParticle(ParticleTypes.FLAME,
                         worldPosition.getX(), worldPosition.getY() + 1.5f, worldPosition.getZ(), 0, 0.1f, 0);*/
             }
