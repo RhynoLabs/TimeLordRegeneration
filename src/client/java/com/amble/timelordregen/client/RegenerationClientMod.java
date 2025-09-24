@@ -10,13 +10,19 @@ import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.blockrenderlayer.v1.BlockRenderLayerMap;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.client.particle.v1.ParticleFactoryRegistry;
+import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
+import net.fabricmc.fabric.api.resource.ResourcePackActivationType;
+import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.render.RenderLayer;
+
+import static com.amble.timelordregen.RegenerationMod.id;
 
 public class RegenerationClientMod implements ClientModInitializer {
     @Override
     public void onInitializeClient() {
 
         Animations.init();
+        resourcepackRegister();
 
         // Block render stuff
         blockRenderLayers();
@@ -57,5 +63,19 @@ public class RegenerationClientMod implements ClientModInitializer {
     public void registerParticles() {
         ParticleFactoryRegistry.getInstance().register(RegenerationMod.RIGHT_REGEN_PARTICLE, RightRegenParticle.Factory::new);
         ParticleFactoryRegistry.getInstance().register(RegenerationMod.REGEN_HEAD_PARTICLE, RegenHeadParticle.Factory::new);
+    }
+
+    public static void resourcepackRegister() {
+
+        // Register builtin resourcepacks
+        FabricLoader.getInstance().
+
+                getModContainer("timelordregen").
+
+                ifPresent(modContainer ->
+
+                {
+                    ResourceManagerHelper.registerBuiltinResourcePack(id("bushy_leaves"), modContainer, ResourcePackActivationType.NORMAL);
+                });
     }
 }

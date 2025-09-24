@@ -80,6 +80,22 @@ public class RegenDataGen implements DataGeneratorEntrypoint {
 			// Items
             provider.addTranslation(RegenerationModItems.ELIXIR_OF_LIFE,"Elixir of Life");
 
+            // Blocks
+            provider.addTranslation(RegenerationModBlocks.CADON_LOG, "Cadon Log");
+            provider.addTranslation(RegenerationModBlocks.STRIPPED_CADON_LOG, "Stripped Cadon Log");
+            provider.addTranslation(RegenerationModBlocks.CADON_WOOD, "Cadon Wood");
+            provider.addTranslation(RegenerationModBlocks.STRIPPED_CADON_WOOD, "Stripped Cadon Wood");
+            provider.addTranslation(RegenerationModBlocks.CADON_PLANKS, "Cadon Planks");
+            provider.addTranslation(RegenerationModBlocks.CADON_LEAVES, "Cadon Leaves");
+            provider.addTranslation(RegenerationModBlocks.CADON_STAIRS, "Cadon Stairs");
+            provider.addTranslation(RegenerationModBlocks.CADON_SLAB, "Cadon Slab");
+            provider.addTranslation(RegenerationModBlocks.CADON_FENCE, "Cadon Fence");
+            provider.addTranslation(RegenerationModBlocks.CADON_FENCE_GATE, "Cadon Fence Gate");
+            provider.addTranslation(RegenerationModBlocks.CADON_DOOR, "Cadon Door");
+            provider.addTranslation(RegenerationModBlocks.CADON_TRAPDOOR, "Cadon Trapdoor");
+            provider.addTranslation(RegenerationModBlocks.CADON_PRESSURE_PLATE, "Cadon Pressure Plate");
+            provider.addTranslation(RegenerationModBlocks.CADON_BUTTON, "Cadon Button");
+
 			return provider;
 		})));
 	}
