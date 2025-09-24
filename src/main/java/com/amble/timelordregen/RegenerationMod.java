@@ -14,7 +14,10 @@ import dev.amble.lib.register.AmbleRegistries;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
 import net.fabricmc.fabric.api.entity.event.v1.ServerLivingEntityEvents;
+import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.fabricmc.fabric.api.particle.v1.FabricParticleTypes;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.particle.DefaultParticleType;
 import net.minecraft.particle.ParticleType;
 import net.minecraft.registry.Registries;
@@ -23,6 +26,9 @@ import net.minecraft.util.Identifier;
 import net.minecraft.util.math.random.Random;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class RegenerationMod implements ModInitializer {
 
@@ -63,14 +69,7 @@ public class RegenerationMod implements ModInitializer {
         });
 
         // Init regeneration manager
-
-	    ServerLivingEntityEvents.ALLOW_DEATH.register((entity, damageSource, damageAmount) -> {
-		    RegenerationInfo info = RegenerationInfo.get(entity);
-
-			if (info == null) return true;
-
-			return !info.tryStart(entity);
-	    });
+		RegenerationInfo.init();
 	}
 
 	public static Identifier id(String path) {

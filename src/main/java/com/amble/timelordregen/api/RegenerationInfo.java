@@ -5,14 +5,16 @@ import com.amble.timelordregen.animation.AnimationTemplate;
 import com.amble.timelordregen.animation.RegenAnimRegistry;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import com.amble.timelordregen.data.Attachments;
 import dev.amble.lib.animation.AnimatedEntity;
-import dev.amble.lib.skin.SkinData;
 import dev.drtheo.scheduler.api.TimeUnit;
 import dev.drtheo.scheduler.api.common.Scheduler;
 import dev.drtheo.scheduler.api.common.TaskStage;
 import lombok.Getter;
 import lombok.Setter;
+import net.fabricmc.fabric.api.entity.event.v1.ServerLivingEntityEvents;
+import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
+import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.sound.SoundCategory;
@@ -20,10 +22,58 @@ import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.MathHelper;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class RegenerationInfo {
+	public static void init() {
+		ServerLifecycleEvents.SERVER_STOPPING.register(server -> {
+			List<Entity> entities = new ArrayList<>(server.getPlayerManager().getPlayerList());
+			server.getWorlds().forEach(world -> world.iterateEntities().forEach(entities::add));
+			entities.forEach(entity -> {
+				if (!(entity instanceof RegenerationCapable regen) || !(entity instanceof LivingEntity living)) return;
+
+				RegenerationInfo info = regen.getRegenerationInfo();
+				if (info != null && info.isRegenerating()) {
+					info.finish(living);
+				}
+			});
+		});
+
+		ServerPlayConnectionEvents.DISCONNECT.register((handler, server) -> {
+			ServerPlayerEntity entity = handler.getPlayer();
+			if (!(entity instanceof RegenerationCapable regen)) return;
+
+			RegenerationInfo info = regen.getRegenerationInfo();
+			if (info != null && info.isRegenerating()) {
+				info.setRegenQueued(true);
+				info.setRegenerating(false);
+			}
+		});
+
+		ServerPlayConnectionEvents.JOIN.register((handler, sender, server) -> {
+			ServerPlayerEntity entity = handler.getPlayer();
+			if (!(entity instanceof RegenerationCapable regen)) return;
+
+			RegenerationInfo info = regen.getRegenerationInfo();
+			if (info != null && info.isRegenQueued()) {
+				info.tryStart(entity);
+			}
+		});
+
+		ServerLivingEntityEvents.ALLOW_DEATH.register((entity, damageSource, damageAmount) -> {
+			RegenerationInfo info = RegenerationInfo.get(entity);
+
+			if (info == null) return true;
+
+			return !info.tryStart(entity)/* && !info.isRegenerating()*/;
+		});
+	}
+
 	public static final Codec<RegenerationInfo> CODEC = RecordCodecBuilder.create(instance -> instance.group(
 			Codec.INT.fieldOf("usesLeft").forGetter(RegenerationInfo::getUsesLeft),
 			Codec.BOOL.fieldOf("isRegenerating").forGetter(RegenerationInfo::isRegenerating),
+			Codec.BOOL.fieldOf("queued_regen").forGetter(RegenerationInfo::isRegenQueued),
 			Identifier.CODEC.fieldOf("animation").forGetter(RegenerationInfo::getAnimationId)
 	).apply(instance, RegenerationInfo::new));
 
@@ -35,10 +85,13 @@ public class RegenerationInfo {
 	private boolean isRegenerating;
 	@Getter @Setter
 	private AnimationTemplate animation;
+	@Getter @Setter
+	private boolean regenQueued; // for when a player leaves and rejoins while regenerating
 
-	private RegenerationInfo(int usesLeft, boolean isRegenerating, Identifier animation) {
+	private RegenerationInfo(int usesLeft, boolean isRegenerating, boolean regenQueued, Identifier animation) {
 		this.usesLeft = usesLeft;
 		this.isRegenerating = isRegenerating;
+		this.regenQueued = regenQueued;
 		this.animation = RegenAnimRegistry.getInstance().getOrFallback(animation);
 	}
 
@@ -46,7 +99,7 @@ public class RegenerationInfo {
 	 * Default constructor for creating a new RegenerationInfo
 	 */
 	public RegenerationInfo() {
-		this(MAX_REGENERATIONS, false, RegenAnimRegistry.getInstance().getRandom().id());
+		this(MAX_REGENERATIONS, false, false, RegenAnimRegistry.getInstance().getRandom().id());
 	}
 
 	public void setUsesLeft(int usesLeft) {
@@ -60,6 +113,7 @@ public class RegenerationInfo {
 	public boolean tryStart(LivingEntity entity) {
 		if (this.isRegenerating() || this.usesLeft <= 0) return false;
 
+		this.setRegenQueued(false);
 		this.decrement();
 		this.setRegenerating(true);
 
@@ -89,6 +143,8 @@ public class RegenerationInfo {
 	}
 
 	public static RegenerationInfo get(LivingEntity entity) {
-		return entity.getAttachedOrCreate(Attachments.REGENERATION);
+		if (!(entity instanceof RegenerationCapable capability)) return null;
+
+		return capability.getRegenerationInfo();
 	}
 }
