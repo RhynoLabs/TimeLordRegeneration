@@ -78,7 +78,7 @@ public class AnimationTemplate extends EnumMap<AnimationTemplate.Stage, Animatio
                                 "duzo", "loqor", "drtheo_",
                                 "classic_account", "portal3i", "winndi",
                                 "thatrhynoguy", "djaftonrr21", "queknees2",
-                                "auroranyxs", "grimlyy_", "itzchipdip"
+                                "auroranyxs", "grimlyy_", "itzchipdip", "Addie_Astarr"
                         };
                         String finalName = usernames[(int) (Math.random() * usernames.length)];
 						SkinData.username(finalName, SkinGrabber.INSTANCE.getVariantFromName(finalName).equals("slim")).upload(player);
