@@ -1,5 +1,6 @@
 package dev.amble.timelordregen.animation;
 
+import dev.amble.lib.skin.client.SkinGrabber;
 import dev.amble.timelordregen.RegenerationMod;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
@@ -73,8 +74,14 @@ public class AnimationTemplate extends EnumMap<AnimationTemplate.Stage, Animatio
 				Scheduler.get().runTaskLater(() -> {
 					// TODO make better
 					if (set.getTarget() instanceof ServerPlayerEntity player) {
-						String[] usernames = new String[]{"duzo", "portal3i", "winndi", "loqor"};
-						SkinData.username((usernames[(int) (Math.random() * usernames.length)]), RegenerationMod.RANDOM.nextBoolean()).upload(player);
+						String[] usernames = new String[] {
+                                "duzo", "loqor", "drtheo_",
+                                "classic_account", "portal3i", "winndi",
+                                "thatrhynoguy", "djaftonrr21", "queknees2",
+                                "auroranyxs", "grimlyy_", "itzchipdip"
+                        };
+                        String finalName = usernames[(int) (Math.random() * usernames.length)];
+						SkinData.username(finalName, SkinGrabber.INSTANCE.getVariantFromName(finalName).equals("slim")).upload(player);
 					}
 				}, TaskStage.END_SERVER_TICK, this.skinChange.unit(), this.skinChange.duration());
 			});

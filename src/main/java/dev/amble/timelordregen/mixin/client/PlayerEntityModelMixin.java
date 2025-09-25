@@ -1,4 +1,4 @@
-package dev.amble.timelordregen.client.mixin;
+package dev.amble.timelordregen.mixin.client;
 
 import dev.amble.timelordregen.client.util.ClientParticleUtil;
 import net.minecraft.client.render.entity.model.PlayerEntityModel;

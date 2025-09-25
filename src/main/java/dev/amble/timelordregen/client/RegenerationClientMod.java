@@ -1,5 +1,6 @@
 package dev.amble.timelordregen.client;
 
+import com.google.gson.JsonObject;
 import dev.amble.timelordregen.RegenerationMod;
 import dev.amble.timelordregen.client.gui.RegenerationSettingsScreen;
 import dev.amble.timelordregen.client.particle.RegenHeadParticle;
@@ -8,12 +9,20 @@ import dev.amble.timelordregen.core.RegenerationModBlocks;
 import dev.amble.timelordregen.network.Networking;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.blockrenderlayer.v1.BlockRenderLayerMap;
+import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.client.particle.v1.ParticleFactoryRegistry;
 import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
 import net.fabricmc.fabric.api.resource.ResourcePackActivationType;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.render.RenderLayer;
+
+import java.io.IOException;
+import java.net.URI;
+import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
+import java.util.Base64;
 
 import static dev.amble.timelordregen.RegenerationMod.id;
 

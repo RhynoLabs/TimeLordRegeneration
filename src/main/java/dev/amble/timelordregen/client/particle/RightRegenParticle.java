@@ -6,16 +6,18 @@ import net.fabricmc.api.Environment;
 import net.minecraft.client.particle.*;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.particle.DefaultParticleType;
+import net.minecraft.particle.ParticleEffect;
 import org.jetbrains.annotations.Nullable;
-import org.joml.Math;
 
 @Environment(EnvType.CLIENT)
 public class RightRegenParticle extends ExplosionSmokeParticle {
     private final SpriteProvider spriteProvider;
 
     RightRegenParticle(ClientWorld clientWorld, double d, double e, double f, SpriteProvider spriteProvider, Entity entity,
-                       float yawOffset, float pitchOffset, boolean shouldPitch, boolean shouldFollowPlayer) {
+                       float yawOffset, float pitchOffset, boolean shouldPitch, boolean shouldFollowPlayer, float speed) {
         super(clientWorld, d, e, f, 0, 0, 0, spriteProvider);
         this.spriteProvider = spriteProvider;
 
@@ -23,14 +25,13 @@ public class RightRegenParticle extends ExplosionSmokeParticle {
         this.gravityStrength = 0.01f;
         this.velocityMultiplier = 0.999f;
 
-        float yawRad = (float) Math.toRadians(shouldFollowPlayer ? (player.headYaw + yawOffset) : yawOffset);
+        float yawRad = (float) Math.toRadians(player.headYaw + yawOffset/*shouldFollowPlayer ? (player.headYaw + yawOffset) : yawOffset*/);
         float pitchRad = shouldPitch ? (float) Math.toRadians(shouldFollowPlayer ? (player.getPitch() + pitchOffset) : pitchOffset) : 0f;
 
         double dirX = -Math.sin(yawRad) * Math.cos(pitchRad);
         double dirY = shouldPitch ? -Math.sin(pitchRad) : 0;
         double dirZ = Math.cos(yawRad) * Math.cos(pitchRad);
 
-        double speed = 0.4;
         double randX = Math.random() * 0.06 - 0.04;
         double randY = Math.random() * 0.06 - 0.04;
         double randZ = Math.random() * 0.06 - 0.04;
@@ -88,7 +89,7 @@ public class RightRegenParticle extends ExplosionSmokeParticle {
         @Override
         public @Nullable Particle createParticle(RegenParticleEffect regenParticle, ClientWorld world, double x, double y, double z, double velocityX, double velocityY, double velocityZ) {
             RightRegenParticle rightRegenParticle = new RightRegenParticle(world, x, y, z, this.spriteProvider,
-                    regenParticle.getEntity(world), regenParticle.getYawOffset(), regenParticle.getPitchOffset(), regenParticle.getShouldPitch(), regenParticle.getShouldFollowPlayer());
+                    regenParticle.getEntity(world), regenParticle.getYawOffset(), regenParticle.getPitchOffset(), regenParticle.getShouldPitch(), regenParticle.getShouldFollowPlayer(), regenParticle.getSpeed());
             rightRegenParticle.setSprite(this.spriteProvider);
             return rightRegenParticle;
         }
