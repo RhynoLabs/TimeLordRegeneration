@@ -4,7 +4,7 @@
 		"sad_regen_start": {
 			"loop": "hold_on_last_frame",
 			"animation_length": 13,
-			"override_previous_animation": true,
+			"override_previous_animation": false,
 			"bones": {
 				"left_arm": {
 					"rotation": {
@@ -593,7 +593,7 @@
 		"sad_regen_loop": {
 			"loop": true,
 			"animation_length": 4,
-			"override_previous_animation": true,
+			"override_previous_animation": false,
 			"bones": {
 				"left_arm": {
 					"rotation": {
@@ -801,7 +801,7 @@
 		},
 		"sad_regen_end": {
 			"animation_length": 12.48,
-			"override_previous_animation": true,
+			"override_previous_animation": false,
 			"bones": {
 				"left_arm": {
 					"rotation": {

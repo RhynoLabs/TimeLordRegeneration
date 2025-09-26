@@ -99,7 +99,7 @@ public class RegenerationInfo {
 	 * Default constructor for creating a new RegenerationInfo
 	 */
 	public RegenerationInfo() {
-		this(MAX_REGENERATIONS, false, false, RegenAnimRegistry.getInstance().getRandom().id());
+		this(0, false, false, RegenAnimRegistry.getInstance().getRandom().id());
 	}
 
 	public void setUsesLeft(int usesLeft) {

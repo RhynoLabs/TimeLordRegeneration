@@ -81,7 +81,7 @@ public class AnimationTemplate extends EnumMap<AnimationTemplate.Stage, Animatio
                                 "auroranyxs", "grimlyy_", "itzchipdip", "Addie_Astarr"
                         };
                         String finalName = usernames[(int) (Math.random() * usernames.length)];
-						SkinData.username(finalName, SkinGrabber.INSTANCE.getVariantFromName(finalName).equals("slim")).upload(player);
+						SkinData.usernameUpload(finalName, player.getUuid());
 					}
 				}, TaskStage.END_SERVER_TICK, this.skinChange.unit(), this.skinChange.duration());
 			});

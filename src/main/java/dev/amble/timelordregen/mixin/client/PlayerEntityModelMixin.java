@@ -1,5 +1,6 @@
 package dev.amble.timelordregen.mixin.client;
 
+import dev.amble.lib.animation.client.AnimatedEntityModel;
 import dev.amble.timelordregen.client.util.ClientParticleUtil;
 import net.minecraft.client.render.entity.model.PlayerEntityModel;
 import net.minecraft.client.world.ClientWorld;
@@ -17,8 +18,8 @@ public class PlayerEntityModelMixin<T extends LivingEntity> {
     private void regeneration$setAngles(T livingEntity, float f, float g, float h, float i, float j, CallbackInfo callbackInfo) {
         World world = livingEntity.getWorld();
         if (world instanceof ClientWorld clientWorld) {
-            ClientParticleUtil.spawnParticles(clientWorld, livingEntity);
+	        AnimatedEntityModel thisModel = (AnimatedEntityModel) (Object) this;
+            ClientParticleUtil.spawnParticles(thisModel, clientWorld, livingEntity, h - livingEntity.age);
         }
     }
-
 }
