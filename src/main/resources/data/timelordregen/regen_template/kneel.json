@@ -1,24 +1,24 @@
 {
   "stages": {
     "start": {
-        "reference": "regen:sadregenstart",
-        "duration": 12.8,
+        "reference": "regen:kneelregen",
+        "duration": 7.55,
         "unit": "seconds"
     },
     "loop": {
-      "reference": "regen:sadregenloop",
-      "duration": 5,
+      "reference": "regen:kneelregenloop",
+      "duration": 7.5,
       "unit": "seconds"
     },
     "end": {
-      "reference": "regen:sadregenend",
-      "duration": 12.48,
+      "reference": "regen:kneelregenstand",
+      "duration": 9.32,
       "unit": "seconds"
     }
   },
   "skinchange": {
     "stage": "loop",
-    "duration": 2.5,
+    "duration": 5,
     "unit": "seconds"
   }
 }

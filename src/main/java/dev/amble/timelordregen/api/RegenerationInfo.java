@@ -142,9 +142,15 @@ public class RegenerationInfo {
 	private void finish(LivingEntity entity) {
 		this.setRegenerating(false);
 		RegenerationEvents.FINISH.invoker().onFinish(entity, this);
+
+		this.setAnimation(RegenAnimRegistry.getInstance().getRandom());
 	}
 
 	private Identifier getAnimationId() {
+		if (this.animation == null) {
+			this.animation = RegenAnimRegistry.getInstance().getRandom();
+		}
+
 		return this.animation.id();
 	}
 

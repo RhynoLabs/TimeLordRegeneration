@@ -1,0 +1,20 @@
+{
+  "sadregenstart": {
+    "movement": false
+  },
+  "sadregenloop": {
+    "movement": false
+  },
+  "sadregenend": {
+    "movement": false
+  },
+  "kneelregen": {
+    "movement": false
+  },
+  "kneelregenloop": {
+    "movement": false
+  },
+  "kneelregenstand": {
+    "movement": false
+  }
+}

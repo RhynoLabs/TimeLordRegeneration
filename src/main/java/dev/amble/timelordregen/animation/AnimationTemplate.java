@@ -14,6 +14,7 @@ import dev.amble.lib.skin.SkinData;
 import dev.drtheo.scheduler.api.TimeUnit;
 import dev.drtheo.scheduler.api.common.Scheduler;
 import dev.drtheo.scheduler.api.common.TaskStage;
+import lombok.Setter;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.dynamic.Codecs;
@@ -99,6 +100,12 @@ public class AnimationTemplate extends EnumMap<AnimationTemplate.Stage, Animatio
 					this.id = Identifier.of(found.getNamespace(), "regen_template");
 					break;
 				}
+			}
+
+			int count = 2;
+			while (RegenAnimRegistry.getInstance().getOptional(this.id).isPresent()) {
+				this.id = Identifier.of(this.id.getNamespace(), this.id.getPath() + "_" + count);
+				count++;
 			}
 
 			if (this.id == null) {
