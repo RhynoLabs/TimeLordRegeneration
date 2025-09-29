@@ -1135,7 +1135,6 @@
 			}
 		},
 		"sadregenend": {
-			"loop": true,
 			"animation_length": 13.0321,
 			"bones": {
 				"left_arm": {

@@ -16,7 +16,7 @@
       "unit": "seconds"
     }
   },
-  "skinchange": {
+  "skin_change": {
     "stage": "loop",
     "duration": 5,
     "unit": "seconds"

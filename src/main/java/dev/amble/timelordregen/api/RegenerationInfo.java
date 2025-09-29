@@ -83,7 +83,7 @@ public class RegenerationInfo {
 	private int usesLeft;
 	@Getter @Setter
 	private boolean isRegenerating;
-	@Getter @Setter
+	@Setter
 	private AnimationTemplate animation;
 	@Getter @Setter
 	private boolean regenQueued; // for when a player leaves and rejoins while regenerating
@@ -121,7 +121,7 @@ public class RegenerationInfo {
 		entity.getWorld().playSound(null, entity.getBlockPos(), SoundEvents.ITEM_TOTEM_USE, SoundCategory.PLAYERS);
 
 		if (entity instanceof AnimatedEntity animated) {
-			AnimationSet set = this.animation.instantiate(true); // todo config option for skin change
+			AnimationSet set = this.getAnimation().instantiate(true); // todo config option for skin change
 			set.finish(() -> this.finish(entity));
 			set.start(animated);
 
@@ -147,11 +147,15 @@ public class RegenerationInfo {
 	}
 
 	private Identifier getAnimationId() {
+		return this.getAnimation().id();
+	}
+
+	public AnimationTemplate getAnimation() {
 		if (this.animation == null) {
 			this.animation = RegenAnimRegistry.getInstance().getRandom();
 		}
 
-		return this.animation.id();
+		return animation;
 	}
 
 	public static RegenerationInfo get(LivingEntity entity) {

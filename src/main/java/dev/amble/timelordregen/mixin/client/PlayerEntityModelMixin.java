@@ -16,10 +16,6 @@ public class PlayerEntityModelMixin<T extends LivingEntity> {
 
     @Inject(method = "setAngles(Lnet/minecraft/entity/LivingEntity;FFFFF)V", at = @At("HEAD"))
     private void regeneration$setAngles(T livingEntity, float f, float g, float h, float i, float j, CallbackInfo callbackInfo) {
-        World world = livingEntity.getWorld();
-        if (world instanceof ClientWorld clientWorld) {
-	        AnimatedEntityModel thisModel = (AnimatedEntityModel) (Object) this;
-            ClientParticleUtil.spawnParticles(thisModel, clientWorld, livingEntity, h - livingEntity.age);
-        }
+
     }
 }

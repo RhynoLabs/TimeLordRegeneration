@@ -46,6 +46,19 @@ public class RegenCommand {
 					        context.getSource().sendFeedback(() -> Text.translatable("gui.regen.settings.remaining", info.getUsesLeft()), false);
 					        return 1;
 				        })))
+				        .then(literal("fix").executes(context -> {
+					        var player = context.getSource().getPlayer();
+					        if (player == null) return 0;
+
+					        RegenerationInfo info = RegenerationInfo.get(player);
+					        if (info == null) {
+						        context.getSource().sendError(Text.translatable("command.regen.data.error"));
+						        return 0;
+					        }
+
+					        info.setRegenerating(false);
+					        return 1;
+				        }))
                 .executes(context -> {
                     var player = context.getSource().getPlayer();
                     if (player == null) return 0;
