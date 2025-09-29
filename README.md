@@ -6,8 +6,8 @@ LOGO PENDING
 
 &nbsp;
 
-[<img alt="curseforge" height="56" src="https://cdn.jsdelivr.net/npm/@intergrav/devins-badges@3/assets/cozy/available/curseforge_vector.svg">](https://www.curseforge.com/minecraft/mc-mods/adventures-in-time) <!-- SVG version -->
-[<img alt="modrinth" height="56" src="https://cdn.jsdelivr.net/npm/@intergrav/devins-badges@3/assets/cozy/available/modrinth_vector.svg">](https://modrinth.com/mod/ait) <!-- SVG version -->
+[<img alt="curseforge" height="56" src="https://cdn.jsdelivr.net/npm/@intergrav/devins-badges@3/assets/cozy/available/curseforge_vector.svg">](https://www.curseforge.com/minecraft/mc-mods/regen) <!-- SVG version -->
+[<img alt="modrinth" height="56" src="https://cdn.jsdelivr.net/npm/@intergrav/devins-badges@3/assets/cozy/available/modrinth_vector.svg">](https://modrinth.com/mod/regen) <!-- SVG version -->
 [<img alt="fabric" height="56" src="https://cdn.jsdelivr.net/npm/@intergrav/devins-badges@3/assets/cozy/supported/fabric_vector.svg">](https://fabricmc.net/) <!-- SVG version -->
 [<img alt="amble" height="56" src="https://raw.githubusercontent.com/amblelabs/modkit/refs/heads/main/promo/cozy_vector_requires.svg">](https://modrinth.com/mod/amblekit)
 
