@@ -11,6 +11,9 @@ LOGO PENDING
 [<img alt="fabric" height="56" src="https://cdn.jsdelivr.net/npm/@intergrav/devins-badges@3/assets/cozy/supported/fabric_vector.svg">](https://fabricmc.net/) <!-- SVG version -->
 [<img alt="amble" height="56" src="https://raw.githubusercontent.com/amblelabs/modkit/refs/heads/main/promo/cozy_vector_requires.svg">](https://modrinth.com/mod/amblekit)
 
+</div>
+
+
 # Summary
 Adds Regeneration from Doctor Who - Your body has a way of cheating death by regenerating every cell in your body, but only a few times.
 
