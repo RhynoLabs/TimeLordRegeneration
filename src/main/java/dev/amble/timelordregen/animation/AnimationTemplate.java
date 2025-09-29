@@ -1,6 +1,5 @@
 package dev.amble.timelordregen.animation;
 
-import dev.amble.lib.skin.client.SkinGrabber;
 import dev.amble.timelordregen.RegenerationMod;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
@@ -11,10 +10,12 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 import dev.amble.lib.api.Identifiable;
 import dev.amble.lib.client.bedrock.BedrockAnimationReference;
 import dev.amble.lib.skin.SkinData;
+import dev.amble.timelordregen.api.RegenerationEvents;
+import dev.amble.timelordregen.api.RegenerationInfo;
 import dev.drtheo.scheduler.api.TimeUnit;
 import dev.drtheo.scheduler.api.common.Scheduler;
 import dev.drtheo.scheduler.api.common.TaskStage;
-import lombok.Setter;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.dynamic.Codecs;
@@ -39,15 +40,15 @@ public class AnimationTemplate extends EnumMap<AnimationTemplate.Stage, Animatio
 
 	public static final Codec<AnimationTemplate> CODEC = RecordCodecBuilder.create(instance -> instance.group(
 			Codec.unboundedMap(Stage.CODEC, ReferenceWrapper.CODEC).fieldOf("stages").forGetter(template -> template),
-			SkinChangePoint.CODEC.optionalFieldOf("skin_change").forGetter(AnimationTemplate::getSkinChange)
+			TransitionPoint.CODEC.optionalFieldOf("transition").forGetter(AnimationTemplate::getTransitionPoint)
 	).apply(instance, (map, skinChangeOpt) -> {
 		AnimationTemplate template = new AnimationTemplate(map);
-		skinChangeOpt.ifPresent(skinChange -> template.skinChange = skinChange);
+		skinChangeOpt.ifPresent(skinChange -> template.transition = skinChange);
 		return template;
 	}));
 
 	private Identifier id;
-	@Nullable private SkinChangePoint skinChange;
+	@Nullable private AnimationTemplate.TransitionPoint transition;
 
 	public AnimationTemplate() {
 		super(Stage.class);
@@ -70,8 +71,8 @@ public class AnimationTemplate extends EnumMap<AnimationTemplate.Stage, Animatio
 	public AnimationSet instantiate(boolean skinChange) {
 		AnimationSet set = new AnimationSet(this);
 
-		if (skinChange && this.skinChange != null) {
-			set.callback(this.skinChange.stage(), stage -> {
+		if (skinChange && this.transition != null) {
+			set.callback(this.transition.stage(), stage -> {
 				Scheduler.get().runTaskLater(() -> {
 					// TODO make better
 					if (set.getTarget() instanceof ServerPlayerEntity player) {
@@ -84,7 +85,11 @@ public class AnimationTemplate extends EnumMap<AnimationTemplate.Stage, Animatio
                         String finalName = usernames[(int) (Math.random() * usernames.length)];
 						SkinData.usernameUpload(finalName, player.getUuid());
 					}
-				}, TaskStage.END_SERVER_TICK, this.skinChange.unit(), this.skinChange.duration());
+
+					if (set.getTarget() instanceof LivingEntity living) {
+						RegenerationEvents.TRANSITION.invoker().onTransition(living, RegenerationInfo.get(living), this.transition.stage());
+					}
+				}, TaskStage.END_SERVER_TICK, this.transition.unit(), this.transition.duration());
 			});
 		}
 
@@ -116,8 +121,8 @@ public class AnimationTemplate extends EnumMap<AnimationTemplate.Stage, Animatio
 		return id;
 	}
 
-	public Optional<SkinChangePoint> getSkinChange() {
-		return Optional.ofNullable(this.skinChange);
+	public Optional<TransitionPoint> getTransitionPoint() {
+		return Optional.ofNullable(this.transition);
 	}
 
 	public static AnimationTemplate fromInputStream(InputStream stream) {
@@ -166,11 +171,11 @@ public class AnimationTemplate extends EnumMap<AnimationTemplate.Stage, Animatio
 				.apply(instance, ReferenceWrapper::new));
 	}
 
-	public record SkinChangePoint(Stage stage, long duration, TimeUnit unit) {
-		public static final Codec<SkinChangePoint> CODEC = RecordCodecBuilder.create((instance) -> instance.group(
-				Stage.CODEC.fieldOf("stage").forGetter(SkinChangePoint::stage),
-				Codec.LONG.fieldOf("duration").forGetter(SkinChangePoint::duration),
-				TIME_UNIT_CODEC.fieldOf("unit").forGetter(SkinChangePoint::unit))
-				.apply(instance, SkinChangePoint::new));
+	public record TransitionPoint(Stage stage, long duration, TimeUnit unit) {
+		public static final Codec<TransitionPoint> CODEC = RecordCodecBuilder.create((instance) -> instance.group(
+				Stage.CODEC.fieldOf("stage").forGetter(TransitionPoint::stage),
+				Codec.LONG.fieldOf("duration").forGetter(TransitionPoint::duration),
+				TIME_UNIT_CODEC.fieldOf("unit").forGetter(TransitionPoint::unit))
+				.apply(instance, TransitionPoint::new));
 	}
 }

@@ -110,6 +110,14 @@ public class RegenDataGen implements DataGeneratorEntrypoint {
 			provider.addTranslation("achievement.timelordregen.title.regeneration", "Change, my dear.");
 			provider.addTranslation("achievement.timelordregen.description.regeneration", "Regenerate for the first time!");
 
+			// Origins
+
+			provider.addTranslation("origin.timelordregen.timelord.name", "Timelord");
+			provider.addTranslation("origin.timelordregen.timelord.description", "You are a Timelord, an alien race from the planet Gallifrey which can escape death via regeneration.");
+
+			provider.addTranslation("origin.timelordregen.regeneration.name", "Regeneration");
+			provider.addTranslation("origin.timelordregen.regeneration.description", "Your body has a way of cheating death by regenerating every cell in your body, but only a few times. On your last regeneration you will become a new origin.");
+
 			return provider;
 		})));
 	}

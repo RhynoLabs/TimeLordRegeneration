@@ -34,6 +34,16 @@ public final class RegenerationEvents {
 		}
 	});
 
+	/**
+	 * Called when a player transitions (eg changes skin)
+	 * @see AnimationTemplate.TransitionPoint
+	 */
+	public static final Event<Transition> TRANSITION = EventFactory.createArrayBacked(Transition.class, callbacks -> (entity, data, stage) -> {
+		for (Transition callback : callbacks) {
+			callback.onTransition(entity, data, stage);
+		}
+	});
+
 
 	@FunctionalInterface
 	public interface Start {
@@ -48,5 +58,10 @@ public final class RegenerationEvents {
 	@FunctionalInterface
 	public interface ChangeStage {
 		void onStateChange(LivingEntity entity, RegenerationInfo data, AnimationTemplate.Stage stage);
+	}
+
+	@FunctionalInterface
+	public interface Transition {
+		void onTransition(LivingEntity entity, RegenerationInfo data, AnimationTemplate.Stage stage);
 	}
 }
