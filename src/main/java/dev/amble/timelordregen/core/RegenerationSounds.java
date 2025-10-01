@@ -1,14 +1,17 @@
 package dev.amble.timelordregen.core;
 
 import dev.amble.timelordregen.RegenerationMod;
+import net.minecraft.client.sound.Sound;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.util.Identifier;
 
 public class RegenerationSounds {
+	public static final SoundEvent SAD_REGEN_START = register("sad_regen_start");
+	public static final SoundEvent SAD_REGEN_LOOP = register("sad_regen_loop");
+	public static final SoundEvent SAD_REGEN_END = register("sad_regen_end");
 
-    //Register Sounds here
 
     private static SoundEvent register(String name) {
         Identifier id = RegenerationMod.id(name);

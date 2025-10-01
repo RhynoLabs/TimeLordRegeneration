@@ -7,7 +7,7 @@
     },
     "loop": {
       "reference": "regen:sadregenloop",
-      "duration": 5,
+      "duration": 9,
       "unit": "seconds"
     },
     "end": {
@@ -18,7 +18,7 @@
   },
   "transition": {
     "stage": "loop",
-    "duration": 2.5,
+    "duration": 4.5,
     "unit": "seconds"
   }
 }

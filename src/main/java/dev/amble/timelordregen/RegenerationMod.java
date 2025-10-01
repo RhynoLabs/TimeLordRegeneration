@@ -6,6 +6,7 @@ import dev.amble.timelordregen.compat.Compat;
 import dev.amble.timelordregen.core.RegenerationModBlocks;
 import dev.amble.timelordregen.core.RegenerationModItemGroups;
 import dev.amble.timelordregen.core.RegenerationModItems;
+import dev.amble.timelordregen.core.RegenerationSounds;
 import dev.amble.timelordregen.core.particle_effects.RegenParticleEffect;
 import dev.amble.timelordregen.data.Attachments;
 import dev.amble.timelordregen.api.RegenerationInfo;
@@ -52,6 +53,7 @@ public class RegenerationMod implements ModInitializer {
         RegistryContainer.register(RegenerationModItemGroups.class, MOD_ID);
         RegistryContainer.register(RegenerationModBlocks.class, MOD_ID);
         RegistryContainer.register(RegenerationModItems.class, MOD_ID);
+	    RegenerationSounds.init();
 
 	    AmbleRegistries.getInstance().registerAll(RegenAnimRegistry.getInstance());
 
