@@ -89,6 +89,7 @@ public class RegenDataGen implements DataGeneratorEntrypoint {
 
 			// Items
             provider.addTranslation(RegenerationModItems.ELIXIR_OF_LIFE,"Elixir of Life");
+            provider.addTranslation(RegenerationModItems.POCKET_WATCH,"Chameleon Arch");
 
             // Blocks
             provider.addTranslation(RegenerationModBlocks.CADON_LOG, "Cadon Log");
@@ -109,6 +110,10 @@ public class RegenDataGen implements DataGeneratorEntrypoint {
 			// Advancements
 			provider.addTranslation("achievement.timelordregen.title.regeneration", "Change, my dear.");
 			provider.addTranslation("achievement.timelordregen.description.regeneration", "Regenerate for the first time!");
+
+
+			provider.addTranslation("achievement.timelordregen.title.watch", "More than just a fobwatch!");
+			provider.addTranslation("achievement.timelordregen.description.watch", "Obtain a Chameleon Arch - a container for regeneration essence.");
 
 			// Origins
 

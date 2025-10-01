@@ -9,6 +9,9 @@ import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricAdvancementProvider;
 import net.minecraft.advancement.Advancement;
 import net.minecraft.advancement.AdvancementFrame;
+import net.minecraft.advancement.criterion.InventoryChangedCriterion;
+import net.minecraft.advancement.criterion.RecipeCraftedCriterion;
+import net.minecraft.item.Items;
 import net.minecraft.text.Text;
 
 import java.util.function.Consumer;
@@ -26,5 +29,13 @@ public class RegenerationModAchivementProvider extends FabricAdvancementProvider
 						null, AdvancementFrame.GOAL, true, true, false)
 				.criterion("first_regeneration", RegenerationCriterions.FIRST_REGENERATION.conditions())
 				.build(consumer, RegenerationMod.MOD_ID + "/first_regeneration");
+
+		Advancement watch = Advancement.Builder.create()
+				.parent(regeneration)
+				.display(RegenerationModItems.POCKET_WATCH, Text.translatable("achievement.timelordregen.title.watch"),
+						Text.translatable("achievement.timelordregen.description.watch"),
+						null, AdvancementFrame.GOAL, true, true, false)
+				.criterion("get_watch", InventoryChangedCriterion.Conditions.items(RegenerationModItems.POCKET_WATCH))
+				.build(consumer, RegenerationMod.MOD_ID + "/get_watch");
     }
 }
