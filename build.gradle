@@ -13,14 +13,16 @@ base {
 }
 
 repositories {
-	maven { url = "https://maven.fabricmc.net/" }
-
+	// Prioritize JitPack for GitHub dependencies
 	maven {
-		url "https://jitpack.io"
-		metadataSources {
-			artifact() // Look directly for artifact
+		name = "JitPack"
+		url = "https://jitpack.io"
+		content {
+			includeGroup "com.github.amblelabs"
 		}
 	}
+
+	maven { url = "https://maven.fabricmc.net/" }
 
 	mavenCentral()
 
