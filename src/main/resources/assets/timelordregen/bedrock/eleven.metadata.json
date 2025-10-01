@@ -1,0 +1,11 @@
+{
+  "eleven_start": {
+    "movement": false
+  },
+  "eleven_loop": {
+    "movement": false
+  },
+  "eleven_end": {
+    "movement": false
+  }
+}

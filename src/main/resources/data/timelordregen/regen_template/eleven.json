@@ -1,0 +1,24 @@
+{
+  "stages": {
+    "start": {
+        "reference": "eleven:eleven_start",
+        "duration": 3.24,
+        "unit": "seconds"
+    },
+    "loop": {
+      "reference": "eleven:eleven_loop",
+      "duration": 2.88,
+      "unit": "seconds"
+    },
+    "end": {
+      "reference": "eleven:eleven_end",
+      "duration": 4.44,
+      "unit": "seconds"
+    }
+  },
+  "transition": {
+    "stage": "loop",
+    "duration": 2.22,
+    "unit": "seconds"
+  }
+}
