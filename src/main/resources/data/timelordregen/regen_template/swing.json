@@ -1,17 +1,17 @@
 {
   "stages": {
     "start": {
-        "reference": "eleven:eleven_start",
-        "duration": 3.24,
+        "reference": "swing:swing_start",
+        "duration": 5.16,
         "unit": "seconds"
     },
     "loop": {
-      "reference": "eleven:eleven_loop",
+      "reference": "swing:swing_loop",
       "duration": 2.88,
       "unit": "seconds"
     },
     "end": {
-      "reference": "eleven:eleven_end",
+      "reference": "swing:swing_end",
       "duration": 4.44,
       "unit": "seconds"
     }

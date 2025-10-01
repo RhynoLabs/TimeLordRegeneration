@@ -1,0 +1,11 @@
+{
+  "swing_start": {
+    "movement": false
+  },
+  "swing_loop": {
+    "movement": false
+  },
+  "swing_end": {
+    "movement": false
+  }
+}

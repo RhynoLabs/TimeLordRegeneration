@@ -17,6 +17,9 @@ public class RegenerationSounds {
 	public static final SoundEvent ELEVEN_REGEN_START = register("eleven_regen_start");
 	public static final SoundEvent ELEVEN_REGEN_LOOP = register("eleven_regen_loop");
 	public static final SoundEvent ELEVEN_REGEN_END = register("eleven_regen_end");
+	public static final SoundEvent SWING_REGEN_START = register("swing_regen_start");
+	public static final SoundEvent SWING_REGEN_LOOP = register("swing_regen_loop");
+	public static final SoundEvent SWING_REGEN_END = register("swing_regen_end");
 
     private static SoundEvent register(String name) {
         Identifier id = RegenerationMod.id(name);
