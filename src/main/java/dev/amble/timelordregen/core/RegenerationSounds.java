@@ -11,7 +11,9 @@ public class RegenerationSounds {
 	public static final SoundEvent SAD_REGEN_START = register("sad_regen_start");
 	public static final SoundEvent SAD_REGEN_LOOP = register("sad_regen_loop");
 	public static final SoundEvent SAD_REGEN_END = register("sad_regen_end");
-
+	public static final SoundEvent KNEEL_REGEN_START = register("kneel_regen_start");
+	public static final SoundEvent KNEEL_REGEN_LOOP = register("kneel_regen_loop");
+	public static final SoundEvent KNEEL_REGEN_END = register("kneel_regen_end");
 
     private static SoundEvent register(String name) {
         Identifier id = RegenerationMod.id(name);
