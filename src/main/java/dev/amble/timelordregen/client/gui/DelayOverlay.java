@@ -38,17 +38,18 @@ public class DelayOverlay implements HudRenderCallback {
 			return;
 		}
 
-		if (SOUND == null) {
-			SOUND = new PlayerFollowingLoopingSound(RegenerationSounds.SWING_REGEN_LOOP, SoundCategory.PLAYERS);
-			mc.getSoundManager().play(SOUND);
-		}
-
 		if (opacity < FADEOUT_THRESHOLD) {
 		} else if (opacity < 1.0F) {
 			opacity = (1.0F - opacity) / 0.1F;
 		} else {
 			opacity = 0.0F;
 		}
+
+		if (SOUND == null) {
+			SOUND = new PlayerFollowingLoopingSound(RegenerationSounds.SWING_REGEN_LOOP, SoundCategory.PLAYERS, opacity);
+			mc.getSoundManager().play(SOUND);
+		}
+
 		SOUND.setVolume(opacity);
 
 		// TODO \/ breaks with chat open
