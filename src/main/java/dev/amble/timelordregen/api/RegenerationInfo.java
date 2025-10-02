@@ -85,7 +85,7 @@ public class RegenerationInfo {
 
 			if (info == null) return true;
 
-			return !info.tryStart(entity) || info.isRegenerating();
+			return !info.tryStart(entity) || info.isActive();
 		});
 
 		// hitting snow stops event
@@ -200,6 +200,8 @@ public class RegenerationInfo {
 
 		this.delay.start(entity.age);
 		this.markDirty();
+
+		entity.setHealth(entity.getMaxHealth());
 
 		return true;
 	}

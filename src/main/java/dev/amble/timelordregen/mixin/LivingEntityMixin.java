@@ -16,7 +16,12 @@ public class LivingEntityMixin {
 		if (this instanceof RegenerationCapable capable) {
 			RegenerationInfo info = capable.getRegenerationInfo();
 			if (info == null) return;
-			if (info.isRegenerating()) {
+			if (info.isActive()) {
+				cir.setReturnValue(false);
+			}
+
+			LivingEntity thisEntity = (LivingEntity)(Object)this;
+			if (amount >= thisEntity.getHealth() && info.tryStart(thisEntity)) {
 				cir.setReturnValue(false);
 			}
 		}
