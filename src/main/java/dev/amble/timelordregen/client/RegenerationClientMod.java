@@ -34,6 +34,7 @@ import static dev.amble.timelordregen.RegenerationMod.id;
 public class RegenerationClientMod implements ClientModInitializer {
     @Override
     public void onInitializeClient() {
+		ClientNetworking.registerClientReceivers();
 
         Animations.init();
         resourcepackRegister();

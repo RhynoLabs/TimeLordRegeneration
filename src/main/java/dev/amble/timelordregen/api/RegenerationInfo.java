@@ -1,31 +1,50 @@
 package dev.amble.timelordregen.api;
 
+import dev.amble.timelordregen.RegenerationMod;
 import dev.amble.timelordregen.animation.AnimationSet;
 import dev.amble.timelordregen.animation.AnimationTemplate;
 import dev.amble.timelordregen.animation.RegenAnimRegistry;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import dev.amble.lib.animation.AnimatedEntity;
+import dev.amble.timelordregen.data.Attachments;
 import dev.drtheo.scheduler.api.TimeUnit;
 import dev.drtheo.scheduler.api.common.Scheduler;
 import dev.drtheo.scheduler.api.common.TaskStage;
 import lombok.Getter;
 import lombok.Setter;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.entity.event.v1.ServerLivingEntityEvents;
+import net.fabricmc.fabric.api.event.lifecycle.v1.ServerBlockEntityEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
+import net.fabricmc.fabric.api.event.player.AttackBlockCallback;
+import net.fabricmc.fabric.api.event.player.PlayerBlockBreakEvents;
+import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents;
+import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
+import net.minecraft.block.Blocks;
+import net.minecraft.client.network.AbstractClientPlayerEntity;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.network.PacketByteBuf;
+import net.minecraft.registry.tag.BlockTags;
 import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.sound.SoundEvents;
 import net.minecraft.text.Text;
+import net.minecraft.util.ActionResult;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.MathHelper;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 public class RegenerationInfo {
+	public static final Identifier SYNC_PACKET = RegenerationMod.id("sync_info");
+
 	public static void init() {
 		ServerLifecycleEvents.SERVER_STOPPING.register(server -> {
 			List<Entity> entities = new ArrayList<>(server.getPlayerManager().getPlayerList());
@@ -68,6 +87,24 @@ public class RegenerationInfo {
 
 			return !info.tryStart(entity) || info.isRegenerating();
 		});
+
+		// hitting snow stops event
+		AttackBlockCallback.EVENT.register((player, world, hand, pos, direction) -> {
+			RegenerationInfo info = RegenerationInfo.get(player);
+
+			if (info != null && info.getDelay().hasEvent()) {
+				// check if snow
+				if (!world.getBlockState(pos).isIn(BlockTags.SNOW)) return ActionResult.PASS;
+
+				info.getDelay().stopEvent();
+				info.markDirty();
+				world.playSound(null, player.getBlockPos(), SoundEvents.BLOCK_FIRE_EXTINGUISH, player.getSoundCategory(), 0.25F, 1.0F);
+
+				return ActionResult.SUCCESS;
+			}
+
+			return ActionResult.PASS;
+		});
 	}
 
 	public static final Codec<RegenerationInfo> CODEC = RecordCodecBuilder.create(instance -> instance.group(
@@ -90,6 +127,8 @@ public class RegenerationInfo {
 	private boolean regenQueued; // for when a player leaves and rejoins while regenerating
 	@Getter
 	private final Delay delay;
+	@Getter @Setter
+	private boolean dirty; // mark dirty to sync to client
 
 	private RegenerationInfo(int usesLeft, boolean isRegenerating, boolean regenQueued, Identifier animation, Delay delay) {
 		this.usesLeft = usesLeft;
@@ -115,6 +154,23 @@ public class RegenerationInfo {
 	}
 
 	public void tick(LivingEntity entity) {
+		if (entity.getWorld().isClient) return;
+
+		if (this.isDirty()) {
+			this.setDirty(false);
+
+			if (entity instanceof ServerPlayerEntity player) {
+				this.sync(player, entity.getUuid());
+			} else {
+				// sync to all players tracking this entity
+				entity.getWorld().getPlayers().forEach(player -> {
+					if (player.squaredDistanceTo(entity) < 64 * 64) {
+						this.sync((ServerPlayerEntity) player, entity.getUuid());
+					}
+				});
+			}
+		}
+
 		if (delay.isRunning()) {
 			Delay.Result result = delay.tick(entity.age);
 
@@ -122,11 +178,12 @@ public class RegenerationInfo {
 				case REGENERATE -> {
 					this.setRegenQueued(true);
 					delay.stop();
+					this.markDirty();
 				}
 				case EVENT -> {
 					RegenerationEvents.DELAY_EVENT.invoker().onEvent(entity, this);
 
-					entity.sendMessage(Text.literal("EVENT!!"));
+					this.markDirty();
 				}
 				case NONE -> {
 				}
@@ -142,6 +199,7 @@ public class RegenerationInfo {
 		if (this.isActive() || this.usesLeft <= 0) return false;
 
 		this.delay.start(entity.age);
+		this.markDirty();
 
 		return true;
 	}
@@ -173,6 +231,7 @@ public class RegenerationInfo {
 		}
 
 		RegenerationEvents.START.invoker().onStart(entity, this);
+		this.markDirty();
 
 		return true;
 	}
@@ -182,6 +241,7 @@ public class RegenerationInfo {
 		RegenerationEvents.FINISH.invoker().onFinish(entity, this);
 
 		this.setAnimation(RegenAnimRegistry.getInstance().getRandom());
+		this.markDirty();
 	}
 
 	private Identifier getAnimationId() {
@@ -199,6 +259,7 @@ public class RegenerationInfo {
 	public void stopRegeneration() {
 		this.setRegenerating(false);
 		this.delay.stop();
+		this.markDirty();
 	}
 
 	/**
@@ -207,6 +268,45 @@ public class RegenerationInfo {
 	 */
 	public boolean isActive() {
 		return this.isRegenerating() || this.delay.isRunning() || this.isRegenQueued();
+	}
+
+	public void markDirty() {
+		this.setDirty(true);
+	}
+
+	private void sync(ServerPlayerEntity target, UUID sourceId) {
+		PacketByteBuf buf = PacketByteBufs.create();
+
+		buf.writeUuid(sourceId);
+		buf.encodeAsJson(CODEC, this);
+
+		ServerPlayNetworking.send(target, SYNC_PACKET, buf);
+	}
+
+	@Environment(EnvType.CLIENT)
+	public static void receive(PacketByteBuf buf) {
+		UUID playerId  = buf.readUuid();
+		RegenerationInfo info = buf.decodeAsJson(CODEC);
+
+		if (info == null) {
+			RegenerationMod.LOGGER.warn("Received null RegenerationInfo from server for player {}", playerId);
+			return;
+		}
+		if (net.minecraft.client.MinecraftClient.getInstance().world == null) {
+			RegenerationMod.LOGGER.warn("Received RegenerationInfo from server for player {}, but client world is null", playerId);
+			return;
+		}
+
+		PlayerEntity entity = net.minecraft.client.MinecraftClient.getInstance().world.getPlayerByUuid(playerId);
+		if (entity == null) {
+			RegenerationMod.LOGGER.warn("Received RegenerationInfo from server for player {}, but could not find player in client world", playerId);
+			return;
+		}
+		if (!(entity instanceof RegenerationCapable)) {
+			RegenerationMod.LOGGER.warn("Received RegenerationInfo from server for player {}, but player is not RegenerationCapable", playerId);
+			return;
+		}
+		entity.setAttached(Attachments.REGENERATION, info);
 	}
 
 	public static RegenerationInfo get(LivingEntity entity) {
@@ -243,6 +343,10 @@ public class RegenerationInfo {
 
 		public boolean isRunning() {
 			return this.start >= 0;
+		}
+
+		public boolean hasEvent() {
+			return this.lastEvent >= 0;
 		}
 
 		public float getProgress(float current) {

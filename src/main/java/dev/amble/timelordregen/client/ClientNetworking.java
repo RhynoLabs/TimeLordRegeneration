@@ -1,5 +1,6 @@
 package dev.amble.timelordregen.client;
 
+import dev.amble.timelordregen.api.RegenerationInfo;
 import dev.amble.timelordregen.client.gui.RegenerationSettingsScreen;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.minecraft.client.MinecraftClient;
@@ -14,5 +15,9 @@ public class ClientNetworking {
                 MinecraftClient.getInstance().setScreen(new RegenerationSettingsScreen(MinecraftClient.getInstance().player));
             });
         });
-    }
+
+		ClientPlayNetworking.registerGlobalReceiver(RegenerationInfo.SYNC_PACKET, (client, handler, buf, responseSender) -> {
+			RegenerationInfo.receive(buf);
+		});
+	}
 }

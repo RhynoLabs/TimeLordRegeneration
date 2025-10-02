@@ -21,15 +21,14 @@ public class DelayOverlay implements HudRenderCallback {
 		RegenerationInfo info = RegenerationInfo.get(mc.player);
 		if (info == null) return;
 
-		float opacity = info.getDelay().getEventProgress(mc.player.age + tickDelta); // todo regeneration info is not synced to client
+		float opacity = info.isRegenerating() ? 1 : info.getDelay().getEventProgress(mc.player.age + tickDelta);
 
 		if (opacity <= 0.0F) return;
 
 		RenderSystem.disableDepthTest();
 		RenderSystem.depthMask(false);
 		context.setShaderColor(1.0F, 1.0F, 1.0F, opacity);
-		context.drawTexture(TEXTURE, (context.getScaledWindowWidth() / 2) - 8,
-				(context.getScaledWindowHeight() / 2) - 8, 0, 0.0F, 0.0F, 16, 16, 16, 16);
+		context.drawTexture(TEXTURE, 0, 0, 0, 0.0F, 0.0F, context.getScaledWindowWidth(), context.getScaledWindowHeight(), context.getScaledWindowWidth(), context.getScaledWindowHeight() * 2);
 		RenderSystem.defaultBlendFunc();
 		RenderSystem.depthMask(true);
 		RenderSystem.enableDepthTest();
