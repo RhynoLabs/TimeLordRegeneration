@@ -13,12 +13,12 @@ import lombok.Getter;
 import lombok.Setter;
 import net.fabricmc.fabric.api.entity.event.v1.ServerLivingEntityEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
+import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.sound.SoundCategory;
-import net.minecraft.sound.SoundEvents;
+import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.MathHelper;
 
@@ -47,7 +47,7 @@ public class RegenerationInfo {
 			RegenerationInfo info = regen.getRegenerationInfo();
 			if (info != null && info.isRegenerating()) {
 				info.setRegenQueued(true);
-				info.setRegenerating(false);
+				info.stopRegeneration();
 			}
 		});
 
@@ -66,15 +66,16 @@ public class RegenerationInfo {
 
 			if (info == null) return true;
 
-			return !info.tryStart(entity) && !info.isRegenerating();
+			return !info.tryStart(entity) || info.isRegenerating();
 		});
 	}
 
 	public static final Codec<RegenerationInfo> CODEC = RecordCodecBuilder.create(instance -> instance.group(
 			Codec.INT.fieldOf("usesLeft").forGetter(RegenerationInfo::getUsesLeft),
 			Codec.BOOL.fieldOf("isRegenerating").forGetter(RegenerationInfo::isRegenerating),
-			Codec.BOOL.fieldOf("queued_regen").forGetter(RegenerationInfo::isRegenQueued),
-			Identifier.CODEC.fieldOf("animation").forGetter(RegenerationInfo::getAnimationId)
+			Codec.BOOL.fieldOf("regenQueued").forGetter(RegenerationInfo::isRegenQueued),
+			Identifier.CODEC.fieldOf("animation").forGetter(RegenerationInfo::getAnimationId),
+			Delay.CODEC.fieldOf("delay").forGetter(info -> info.delay)
 	).apply(instance, RegenerationInfo::new));
 
 	public static final int MAX_REGENERATIONS = 12;
@@ -87,19 +88,22 @@ public class RegenerationInfo {
 	private AnimationTemplate animation;
 	@Getter @Setter
 	private boolean regenQueued; // for when a player leaves and rejoins while regenerating
+	@Getter
+	private final Delay delay;
 
-	private RegenerationInfo(int usesLeft, boolean isRegenerating, boolean regenQueued, Identifier animation) {
+	private RegenerationInfo(int usesLeft, boolean isRegenerating, boolean regenQueued, Identifier animation, Delay delay) {
 		this.usesLeft = usesLeft;
 		this.isRegenerating = isRegenerating;
 		this.regenQueued = regenQueued;
 		this.animation = RegenAnimRegistry.getInstance().getOrFallback(animation);
+		this.delay = delay;
 	}
 
 	/**
 	 * Default constructor for creating a new RegenerationInfo
 	 */
 	public RegenerationInfo() {
-		this(0, false, false, RegenAnimRegistry.getInstance().getRandom().id());
+		this(0, false, false, RegenAnimRegistry.getInstance().getRandom().id(), new Delay());
 	}
 
 	public void setUsesLeft(int usesLeft) {
@@ -110,8 +114,43 @@ public class RegenerationInfo {
 		this.setUsesLeft(this.getUsesLeft() - 1);
 	}
 
+	public void tick(LivingEntity entity) {
+		if (delay.isRunning()) {
+			Delay.Result result = delay.tick(entity.age);
+
+			switch (result) {
+				case REGENERATE -> {
+					this.setRegenQueued(true);
+					delay.stop();
+				}
+				case EVENT -> {
+					RegenerationEvents.DELAY_EVENT.invoker().onEvent(entity, this);
+
+					entity.sendMessage(Text.literal("EVENT!!"));
+				}
+				case NONE -> {
+				}
+			}
+		}
+
+		if (isRegenQueued()) {
+			start(entity);
+		}
+	}
+
 	public boolean tryStart(LivingEntity entity) {
+		if (this.isActive() || this.usesLeft <= 0) return false;
+
+		this.delay.start(entity.age);
+
+		return true;
+	}
+
+	private boolean start(LivingEntity entity) {
 		if (this.isRegenerating() || this.usesLeft <= 0) return false;
+
+		boolean moving = entity.getX() != entity.prevX || entity.getY() != entity.prevY || entity.getZ() != entity.prevZ || !entity.isOnGround();
+		if (moving) return false;
 
 		this.setRegenQueued(false);
 		this.decrement();
@@ -139,7 +178,7 @@ public class RegenerationInfo {
 	}
 
 	private void finish(LivingEntity entity) {
-		this.setRegenerating(false);
+		this.stopRegeneration();
 		RegenerationEvents.FINISH.invoker().onFinish(entity, this);
 
 		this.setAnimation(RegenAnimRegistry.getInstance().getRandom());
@@ -157,9 +196,121 @@ public class RegenerationInfo {
 		return animation;
 	}
 
+	public void stopRegeneration() {
+		this.setRegenerating(false);
+		this.delay.stop();
+	}
+
+	/**
+	 * Whether the entity is currently in the process of regenerating
+	 * @return true if regenerating or in delay or queued to regen
+	 */
+	public boolean isActive() {
+		return this.isRegenerating() || this.delay.isRunning() || this.isRegenQueued();
+	}
+
 	public static RegenerationInfo get(LivingEntity entity) {
 		if (!(entity instanceof RegenerationCapable capability)) return null;
 
 		return capability.getRegenerationInfo();
+	}
+
+	public static class Delay {
+		public static final Codec<Delay> CODEC = RecordCodecBuilder.create(instance -> instance.group(
+				Codec.INT.fieldOf("start").forGetter(delay -> delay.start),
+				Codec.INT.fieldOf("lastEvent").forGetter(delay -> delay.lastEvent)
+		).apply(instance, Delay::new));
+
+		private static final int MAX_DURATION = 6000; // 5 minutes
+		private static final int TIME_TO_STOP = 200; // time to stop the event
+		private static final float EVENT_CHANCE = 0.05f; // max chance of an event happening
+
+		private int start;
+		private int lastEvent;
+
+		public Delay(int start, int lastEvent) {
+			this.start = start;
+			this.lastEvent = lastEvent;
+		}
+
+		public Delay(int start) {
+			this(start, -1);
+		}
+
+		public Delay() {
+			this(-1, -1);
+		}
+
+		public boolean isRunning() {
+			return this.start >= 0;
+		}
+
+		public float getProgress(float current) {
+			// chance increases as it approaches max duration
+			if (this.start < 0) return 0;
+			float duration = current - this.start;
+			if (duration <= 0) return 0;
+			if (duration >= MAX_DURATION) return 1;
+			return (float) duration / MAX_DURATION;
+		}
+
+		public float getEventProgress(float current) {
+			if (this.lastEvent < 0) return 0;
+			float duration = current - this.lastEvent;
+			if (duration <= 0) return 0;
+			if (duration >= TIME_TO_STOP) return 1;
+			return duration / TIME_TO_STOP;
+		}
+
+		public void stopEvent() {
+			this.lastEvent = -1;
+		}
+
+		public void stop() {
+			this.start = -1;
+			this.lastEvent = -1;
+		}
+
+		public void start(int current) {
+			this.start = current;
+			this.lastEvent = current;
+		}
+
+		/**
+		 * @return the result of the tick
+		 */
+		public Result tick(int current) {
+			if (this.start < 0) return Result.NONE;
+			if (current < this.start) {
+				this.stop();
+				return Result.NONE;
+			}
+			if (current - this.start >= MAX_DURATION) {
+				this.start = -1;
+				return Result.REGENERATE;
+			}
+			if (this.lastEvent > 0 && current - this.lastEvent >= TIME_TO_STOP) {
+				this.start = -1;
+				this.lastEvent = -1;
+				return Result.REGENERATE;
+			}
+
+			if (this.lastEvent < 0) {
+				float progress = this.getProgress(current);
+				float probability = EVENT_CHANCE * progress; // Event chance increases with progress
+				if (Math.random() < probability) {
+					this.lastEvent = current;
+					return Result.EVENT;
+				}
+			}
+
+			return Result.NONE;
+		}
+
+		public enum Result {
+			REGENERATE,
+			EVENT,
+			NONE;
+		}
 	}
 }

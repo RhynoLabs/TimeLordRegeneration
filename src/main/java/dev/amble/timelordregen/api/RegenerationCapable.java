@@ -10,6 +10,15 @@ public interface RegenerationCapable {
 		return getLivingInfo(living);
 	}
 
+	default void tickRegeneration() {
+		RegenerationInfo info = this.getRegenerationInfo();
+		if (info != null) {
+			if (!(this instanceof LivingEntity living)) throw new UnsupportedOperationException("This method is only default for LivingEntity instances. Override it and implement it");
+
+			info.tick(living);
+		}
+	}
+
 	static RegenerationInfo getLivingInfo(LivingEntity entity) {
 		return entity.getAttachedOrCreate(Attachments.REGENERATION);
 	}

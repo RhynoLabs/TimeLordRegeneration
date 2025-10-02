@@ -56,7 +56,7 @@ public class RegenCommand {
 						        return 0;
 					        }
 
-					        info.setRegenerating(false);
+					        info.stopRegeneration();
 					        return 1;
 				        }))
                 .executes(context -> {

@@ -44,6 +44,16 @@ public final class RegenerationEvents {
 		}
 	});
 
+	/**
+	 * Called when a regeneration delay event triggers
+	 * @see RegenerationInfo.Delay.Result
+	 */
+	public static final Event<DelayEvent> DELAY_EVENT = EventFactory.createArrayBacked(DelayEvent.class, callbacks -> (entity, data) -> {
+		for (DelayEvent callback : callbacks) {
+			callback.onEvent(entity, data);
+		}
+	});
+
 
 	@FunctionalInterface
 	public interface Start {
@@ -63,5 +73,10 @@ public final class RegenerationEvents {
 	@FunctionalInterface
 	public interface Transition {
 		void onTransition(LivingEntity entity, RegenerationInfo data, AnimationTemplate.Stage stage);
+	}
+
+	@FunctionalInterface
+	public interface DelayEvent {
+		void onEvent(LivingEntity entity, RegenerationInfo data);
 	}
 }

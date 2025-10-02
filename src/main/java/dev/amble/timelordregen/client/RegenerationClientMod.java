@@ -2,6 +2,7 @@ package dev.amble.timelordregen.client;
 
 import com.google.gson.JsonObject;
 import dev.amble.timelordregen.RegenerationMod;
+import dev.amble.timelordregen.client.gui.DelayOverlay;
 import dev.amble.timelordregen.client.gui.RegenerationSettingsScreen;
 import dev.amble.timelordregen.client.particle.RegenHeadParticle;
 import dev.amble.timelordregen.client.particle.RightRegenParticle;
@@ -14,6 +15,7 @@ import net.fabricmc.fabric.api.blockrenderlayer.v1.BlockRenderLayerMap;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.client.particle.v1.ParticleFactoryRegistry;
+import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback;
 import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
 import net.fabricmc.fabric.api.resource.ResourcePackActivationType;
 import net.fabricmc.loader.api.FabricLoader;
@@ -42,6 +44,7 @@ public class RegenerationClientMod implements ClientModInitializer {
         // Register particles on client side
         registerParticles();
 
+	    HudRenderCallback.EVENT.register(new DelayOverlay());
 	    ModelPredicateProviderRegistry.register(RegenerationModItems.POCKET_WATCH, id("open"), (stack, world, entity, seed) -> PocketWatchItem.isOpened(stack) ? 1.0f : 0.0f);
 
         ClientPlayNetworking.registerGlobalReceiver(Networking.OPEN_GUI_PACKET, (client, handler, buf, responseSender) -> {
