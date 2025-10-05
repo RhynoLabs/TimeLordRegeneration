@@ -2,6 +2,7 @@ package dev.amble.timelordregen.client.gui;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import dev.amble.timelordregen.RegenerationMod;
+import dev.amble.timelordregen.api.RegenerationEvents;
 import dev.amble.timelordregen.api.RegenerationInfo;
 import dev.amble.timelordregen.client.sound.PlayerFollowingLoopingSound;
 import dev.amble.timelordregen.core.RegenerationSounds;
@@ -25,18 +26,17 @@ public class DelayOverlay implements HudRenderCallback {
 			return;
 
 		RegenerationInfo info = RegenerationInfo.get(mc.player);
-		if (info == null) return;
 
-		float opacity = info.isRegenerating() ? 0 : info.getDelay().getEventProgress(mc.player.age + tickDelta);
-
-		if (opacity <= 0.0F) {
+		boolean hasFx = info != null && !info.isRegenerating() && info.getDelay().isRunning();
+		if (!hasFx) {
 			if (SOUND != null) {
 				mc.getSoundManager().stop(SOUND);
 				SOUND = null;
 			}
-
 			return;
 		}
+
+		float opacity = info.getDelay().getEventProgress(mc.player.age + tickDelta) + 0.05F;
 
 		if (opacity < FADEOUT_THRESHOLD) {
 		} else if (opacity < 1.0F) {
@@ -45,12 +45,18 @@ public class DelayOverlay implements HudRenderCallback {
 			opacity = 0.0F;
 		}
 
-		if (SOUND == null) {
+		opacity = Math.max(opacity, 0.05F);
+
+		if (SOUND == null || !mc.getSoundManager().isPlaying(SOUND)) {
 			SOUND = new PlayerFollowingLoopingSound(RegenerationSounds.SWING_REGEN_LOOP, SoundCategory.PLAYERS, opacity);
 			mc.getSoundManager().play(SOUND);
 		}
 
 		SOUND.setVolume(opacity);
+
+		if (opacity <= 0.0F) {
+			return;
+		}
 
 		// TODO \/ breaks with chat open
 		if (mc.options.getPerspective() == Perspective.FIRST_PERSON) {

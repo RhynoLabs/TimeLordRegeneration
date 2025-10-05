@@ -1,5 +1,6 @@
 package dev.amble.timelordregen.api;
 
+import dev.amble.lib.client.bedrock.BedrockAnimationReference;
 import dev.amble.timelordregen.RegenerationMod;
 import dev.amble.timelordregen.animation.AnimationSet;
 import dev.amble.timelordregen.animation.AnimationTemplate;
@@ -204,6 +205,10 @@ public class RegenerationInfo {
 
 		entity.setHealth(entity.getMaxHealth());
 
+		if (entity instanceof AnimatedEntity animated) {
+			animated.playAnimation(BedrockAnimationReference.parse(Identifier.of("start", RegenerationMod.RANDOM.nextBoolean() ? "right" : "left")));
+		}
+
 		return true;
 	}
 
@@ -325,7 +330,7 @@ public class RegenerationInfo {
 		).apply(instance, Delay::new));
 
 		private static final int MAX_DURATION = 6000; // 5 minutes
-		private static final int TIME_TO_STOP = 200; // time to stop the event
+		private static final int TIME_TO_STOP = 300; // time to stop the event
 		private static final float EVENT_CHANCE = 0.05f; // max chance of an event happening
 
 		private int start;
@@ -402,7 +407,7 @@ public class RegenerationInfo {
 				return Result.REGENERATE;
 			}
 
-			if (this.lastEvent < 0) {
+			if (this.lastEvent < 0 && current % 20 == 0) { // check for event every second
 				float progress = this.getProgress(current);
 				float probability = EVENT_CHANCE * progress; // Event chance increases with progress
 				if (Math.random() < probability) {
