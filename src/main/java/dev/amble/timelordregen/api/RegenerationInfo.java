@@ -174,6 +174,11 @@ public class RegenerationInfo {
 		}
 
 		if (delay.isRunning()) {
+			if (this.getUsesLeft() <= 0) {
+				delay.stop();
+				return;
+			}
+
 			Delay.Result result = delay.tick(entity.age);
 
 			switch (result) {
