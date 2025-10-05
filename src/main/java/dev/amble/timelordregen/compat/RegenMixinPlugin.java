@@ -32,6 +32,8 @@ public class RegenMixinPlugin implements IMixinConfigPlugin {
 		String id = parts[5];
 		if (id.equals("origin"))
 			return DependencyChecker.HAS_ORIGIN;
+		if (id.equals("ait"))
+			return DependencyChecker.HAS_AIT;
 
 		return true;
 	}

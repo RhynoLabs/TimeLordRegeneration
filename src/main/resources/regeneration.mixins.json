@@ -10,6 +10,7 @@
     "origin.PlayerOriginComponentMixin"
   ],
   "client": [
+    "ait.ControlEntityRendererMixin",
     "client.PlayerEntityModelMixin"
   ],
   "injectors": {
