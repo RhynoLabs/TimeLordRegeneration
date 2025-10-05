@@ -147,6 +147,7 @@ public class RegenerationInfo {
 
 	public void setUsesLeft(int usesLeft) {
 		this.usesLeft = MathHelper.clamp(usesLeft, 0, MAX_REGENERATIONS);
+		this.markDirty();
 	}
 
 	public void decrement() {
