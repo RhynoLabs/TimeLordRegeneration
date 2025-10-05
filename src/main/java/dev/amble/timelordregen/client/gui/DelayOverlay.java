@@ -17,6 +17,7 @@ public class DelayOverlay implements HudRenderCallback {
 	private static final Identifier TEXTURE = RegenerationMod.id("textures/gui/delay_overlay.png");
 	private static PlayerFollowingLoopingSound SOUND;
 	private static final float FADEOUT_THRESHOLD = 0.75F;
+	private static final float BACKGROUND_VALUE = 0.1F;
 
 	@Override
 	public void onHudRender(DrawContext context, float tickDelta) {
@@ -36,23 +37,17 @@ public class DelayOverlay implements HudRenderCallback {
 			return;
 		}
 
-		float opacity = info.getDelay().getEventProgress(mc.player.age + tickDelta) + 0.05F;
+		float opacity = info.getDelay().getEventProgress(mc.player.age + tickDelta) + BACKGROUND_VALUE;
+		opacity = (float) (opacity * getFadeoutMultiplier(opacity, FADEOUT_THRESHOLD, 1.0F, 12.0F));
 
-		if (opacity < FADEOUT_THRESHOLD) {
-		} else if (opacity < 1.0F) {
-			opacity = (1.0F - opacity) / 0.1F;
-		} else {
-			opacity = 0.0F;
-		}
-
-		opacity = Math.max(opacity, 0.05F);
+		opacity = Math.max(opacity, BACKGROUND_VALUE);
 
 		if (SOUND == null || !mc.getSoundManager().isPlaying(SOUND)) {
 			SOUND = new PlayerFollowingLoopingSound(RegenerationSounds.SWING_REGEN_LOOP, SoundCategory.PLAYERS, opacity);
 			mc.getSoundManager().play(SOUND);
 		}
 
-		SOUND.setVolume(opacity);
+		SOUND.setVolume(opacity * 0.5F);
 
 		if (opacity <= 0.0F) {
 			return;
@@ -69,5 +64,11 @@ public class DelayOverlay implements HudRenderCallback {
 			RenderSystem.enableDepthTest();
 			context.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
 		}
+	}
+
+	private static double getFadeoutMultiplier(float x, float start, float end, float steepness) {
+		double t = (x - start) / (end - start);
+		// Logistic function centered at t = 0.5
+		return 1.0 / (1.0 + Math.exp(steepness * (t - 0.5)));
 	}
 }
