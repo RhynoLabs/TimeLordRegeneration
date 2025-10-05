@@ -13,6 +13,8 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 public class LivingEntityMixin {
 	@Inject(method="damage", at=@At("HEAD"), cancellable=true)
 	private void regeneration$damage(DamageSource source, float amount, CallbackInfoReturnable<Boolean> cir) {
+		if (amount == Float.MAX_VALUE) return;
+
 		if (this instanceof RegenerationCapable capable) {
 			RegenerationInfo info = capable.getRegenerationInfo();
 			if (info == null) return;
