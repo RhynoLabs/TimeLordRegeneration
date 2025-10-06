@@ -16,7 +16,7 @@ import org.jetbrains.annotations.Nullable;
 public class RightRegenParticle extends ExplosionSmokeParticle {
     private final SpriteProvider spriteProvider;
 
-    RightRegenParticle(ClientWorld clientWorld, double d, double e, double f, SpriteProvider spriteProvider, Entity entity,
+    public RightRegenParticle(ClientWorld clientWorld, double d, double e, double f, SpriteProvider spriteProvider, Entity entity,
                        float yawOffset, float pitchOffset, boolean shouldPitch, boolean shouldFollowPlayer, float speed) {
         super(clientWorld, d, e, f, 0, 0, 0, spriteProvider);
         this.spriteProvider = spriteProvider;
@@ -81,9 +81,15 @@ public class RightRegenParticle extends ExplosionSmokeParticle {
     @Environment(EnvType.CLIENT)
     public static class Factory implements ParticleFactory<RegenParticleEffect> {
         private final SpriteProvider spriteProvider;
+        private static SpriteProvider staticSpriteProvider;
 
         public Factory(SpriteProvider spriteProvider) {
             this.spriteProvider = spriteProvider;
+            staticSpriteProvider = spriteProvider;
+        }
+
+        public static SpriteProvider getSpriteProvider() {
+            return staticSpriteProvider;
         }
 
         @Override

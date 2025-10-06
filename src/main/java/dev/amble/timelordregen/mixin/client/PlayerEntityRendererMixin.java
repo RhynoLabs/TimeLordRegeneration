@@ -1,7 +1,7 @@
 package dev.amble.timelordregen.mixin.client;
 
 import dev.amble.lib.animation.AnimatedInstance;
-import dev.amble.timelordregen.client.RegenRenderType;
+import dev.amble.timelordregen.client.RegenRenderers;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.model.ModelPart;
 import net.minecraft.client.network.AbstractClientPlayerEntity;
@@ -26,7 +26,7 @@ public abstract class PlayerEntityRendererMixin extends LivingEntityRenderer<Abs
 	@Inject(method="renderArm", at=@At("TAIL"))
 	private void regen$afterRenderArm(MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, AbstractClientPlayerEntity player, ModelPart arm, ModelPart sleeve, CallbackInfo ci) {
 		if (player instanceof AnimatedInstance animated) {
-			RegenRenderType.tryRender(animated, animated.getAge() + MinecraftClient.getInstance().getTickDelta(), this.getModel(), matrices, vertexConsumers, light, arm == this.getModel().leftArm ? Arm.LEFT : Arm.RIGHT);
+			RegenRenderers.tryRender(animated, animated.getAge() + MinecraftClient.getInstance().getTickDelta(), this.getModel(), matrices, vertexConsumers, light, arm == this.getModel().leftArm ? Arm.LEFT : Arm.RIGHT);
 		}
 	}
 }

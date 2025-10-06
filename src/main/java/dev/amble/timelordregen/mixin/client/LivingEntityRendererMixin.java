@@ -1,8 +1,7 @@
 package dev.amble.timelordregen.mixin.client;
 
 import dev.amble.lib.animation.AnimatedInstance;
-import dev.amble.timelordregen.animation.RegenAnimRegistry;
-import dev.amble.timelordregen.client.RegenRenderType;
+import dev.amble.timelordregen.client.RegenRenderers;
 import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.entity.LivingEntityRenderer;
 import net.minecraft.client.render.entity.model.EntityModel;
@@ -29,7 +28,7 @@ public abstract class LivingEntityRendererMixin<T extends LivingEntity, M extend
 	)
 	private void regen$afterModelRender(T livingEntity, float f, float delta, MatrixStack stack, VertexConsumerProvider vertexConsumerProvider, int i, CallbackInfo ci) {
 		if (livingEntity instanceof AnimatedInstance animated) {
-			RegenRenderType.tryRender(animated, animated.getAge() + delta, this.getModel(), stack, vertexConsumerProvider, i, null);
+			RegenRenderers.tryRender(animated, animated.getAge() + delta, this.getModel(), stack, vertexConsumerProvider, i, null);
 		}
 	}
 }
