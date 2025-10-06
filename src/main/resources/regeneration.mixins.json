@@ -11,7 +11,8 @@
   ],
   "client": [
     "ait.ControlEntityRendererMixin",
-    "client.PlayerEntityModelMixin"
+    "client.LivingEntityRendererMixin",
+    "client.PlayerEntityRendererMixin"
   ],
   "injectors": {
     "defaultRequire": 1
