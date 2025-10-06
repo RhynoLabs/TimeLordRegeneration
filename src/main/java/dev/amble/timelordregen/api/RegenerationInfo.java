@@ -390,7 +390,6 @@ public class RegenerationInfo {
 
 		public void start(int current) {
 			this.start = current;
-			this.lastEvent = current;
 		}
 
 		/**
