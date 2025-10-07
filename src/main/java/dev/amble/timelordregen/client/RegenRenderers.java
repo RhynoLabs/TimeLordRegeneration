@@ -41,11 +41,13 @@ public enum RegenRenderers implements RegenRendering {
 	PARTICLE {
 		@Override
 		public void renderArm(AnimatedInstance entity, float progress, @Nullable BedrockAnimation animation, RegenerationInfo info, Model model, MatrixStack matrices, VertexConsumerProvider provider, float light, Arm arm) {
+			matrices.translate(0, 0.81, 0);
 			renderParticles(matrices);
 		}
 
 		@Override
 		public void renderAtHead(AnimatedInstance entity, float progress, @Nullable BedrockAnimation animation, RegenerationInfo info, Model model, MatrixStack matrices, VertexConsumerProvider provider, float light, ModelPart headPart) {
+			matrices.translate(0, 0.5, 0);
 			renderParticles(matrices);
 		}
 
