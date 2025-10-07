@@ -38,17 +38,19 @@ public class ControlEntityRendererMixin {
 
 		capable.withInfo().ifPresent(info -> {
 			if (!(hitResult instanceof EntityHitResult entityHit)) {
-				cir.setReturnValue(false);
 				return;
 			}
 
 			Entity hitEntity = entityHit.getEntity();
 
 			if (hitEntity == null) {
-				cir.setReturnValue(false);
 				return;
 			}
-			cir.setReturnValue(hitEntity.equals(entity) && info.getUsesLeft() > 0);
-		});
+
+			boolean valid = hitEntity.equals(entity) && info.getUsesLeft() > 0;
+			if (!valid) return;
+
+			cir.setReturnValue(true);
+	});
 	}
 }
