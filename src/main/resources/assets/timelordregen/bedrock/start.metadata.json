@@ -1,8 +1,8 @@
 {
   "right": {
-    "movement": false
+    "fps_camera": false
   },
   "left": {
-    "movement": false
+    "fps_camera": false
   }
 }

@@ -411,7 +411,7 @@ public class RegenerationInfo {
 				return Result.REGENERATE;
 			}
 
-			if (this.lastEvent < 0 && current % 20 == 0) { // check for event every second
+			if (this.lastEvent < 0/* && current % 20 == 0*/) { // check for event every second
 				float progress = this.getProgress(current);
 				float probability = EVENT_CHANCE * progress; // Event chance increases with progress
 				if (Math.random() < probability) {
